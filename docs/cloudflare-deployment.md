@@ -22,11 +22,8 @@ Before deploying, you need to create the KV namespaces for storing votes and ide
 ### Option A: Using Wrangler CLI
 
 ```bash
-# Install wrangler if not already installed
-npm install -g wrangler
-
 # Login to Cloudflare
-wrangler login
+npx wrangler login
 
 # Create production KV namespaces
 npx wrangler kv:namespace create CURATIONS_VOTES

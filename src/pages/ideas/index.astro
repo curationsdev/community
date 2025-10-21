@@ -1,0 +1,90 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import IdeaCard from "@components/IdeaCard.astro";
+import { ideas } from "@data/ideas";
+---
+<BaseLayout
+  title="CURATIONS Ideas"
+  description="Crowdsourced feature and program requests with live upvoting."
+>
+  <section class="border-b-4 border-ink bg-ink text-sand">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+      <h1 class="font-display text-5xl uppercase tracking-[0.35em]">Idea Submission</h1>
+      <p class="mt-4 max-w-3xl text-sm leading-relaxed text-sand/80">
+        Drop your requests, collaborations, or vibe-heavy experiments. Upvotes are powered by Cloudflare Workers + KV so ideas can
+        trend in real time.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 py-12">
+    <div class="grid gap-8">
+      {ideas.map((idea) => (
+        <IdeaCard idea={idea} />
+      ))}
+    </div>
+  </section>
+
+  <section id="submit" class="border-t-4 border-ink bg-gradient-to-br from-lime-500 via-white to-fuchsia-500">
+    <div class="mx-auto max-w-4xl px-6 py-16">
+      <div class="rounded-3xl border-4 border-ink bg-white p-8 shadow-vibe">
+        <h2 class="font-display text-3xl uppercase tracking-[0.3em] text-ink">Submit a New Idea</h2>
+        <p class="mt-2 text-sm text-ink/70">This form posts to the /api/ideas endpoint served by Cloudflare Workers.</p>
+        <form class="mt-6 space-y-4" data-endpoint={import.meta.env.PUBLIC_IDEA_ENDPOINT ?? "/api/idea"}>
+          <label class="block text-xs font-bold uppercase tracking-[0.3em] text-ink">
+            Title
+            <input type="text" name="title" required class="mt-2 w-full rounded-xl border-2 border-ink bg-white px-4 py-3" />
+          </label>
+          <label class="block text-xs font-bold uppercase tracking-[0.3em] text-ink">
+            Description
+            <textarea name="description" required rows="4" class="mt-2 w-full rounded-xl border-2 border-ink bg-white px-4 py-3"></textarea>
+          </label>
+          <label class="block text-xs font-bold uppercase tracking-[0.3em] text-ink">
+            Categories (comma separated)
+            <input type="text" name="categories" class="mt-2 w-full rounded-xl border-2 border-ink bg-white px-4 py-3" />
+          </label>
+          <button type="submit" class="rounded-full border-4 border-ink bg-fuchsia-500 px-6 py-3 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+            Send Idea
+          </button>
+          <p class="form-status text-xs uppercase tracking-[0.25em] text-ink/60"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+  <script>
+    const form = document.currentScript?.previousElementSibling?.querySelector("form");
+    if (form instanceof HTMLFormElement) {
+      const status = form.querySelector<HTMLElement>(".form-status");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const endpoint = form.dataset.endpoint ?? "/api/idea";
+        const formData = new FormData(form);
+        const payload = {
+          title: formData.get("title"),
+          description: formData.get("description"),
+          categories: String(formData.get("categories") ?? "")
+            .split(",")
+            .map((part) => part.trim())
+            .filter(Boolean),
+        };
+
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (response.ok) {
+            form.reset();
+            if (status) status.textContent = "Idea submitted!";
+          } else {
+            if (status) status.textContent = "Submission failed. Try again.";
+          }
+        } catch (error) {
+          console.error(error);
+          if (status) status.textContent = "Offline? Please retry.";
+        }
+      });
+    }
+  </script>
+</BaseLayout>

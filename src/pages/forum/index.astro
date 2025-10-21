@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ForumChannelCard from "@components/ForumChannelCard.astro";
+import { channels } from "@data/forum";
+---
+<BaseLayout
+  title="CURATIONS Forum"
+  description="Minimalist discussion board backed by Cloudflare Durable Objects."
+>
+  <section class="border-b-4 border-ink bg-ink text-sand">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+      <h1 class="font-display text-5xl uppercase tracking-[0.35em]">Community Forum</h1>
+      <p class="mt-4 max-w-3xl text-sm leading-relaxed text-sand/80">
+        Channels are powered by Durable Objects to provide low-latency discussion threads. Auth can be connected via GitHub, Google, or anonymous guest sessions.
+      </p>
+    </div>
+  </section>
+  <section class="mx-auto max-w-5xl px-6 py-12">
+    <div class="grid gap-8 md:grid-cols-2">
+      {channels.map((channel) => (
+        <ForumChannelCard channel={channel} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

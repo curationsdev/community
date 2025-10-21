@@ -1,0 +1,25 @@
+---
+import NavLink from "./elements/NavLink.astro";
+---
+<header class="sticky top-0 z-50 bg-sand/95 backdrop-blur border-b-4 border-ink">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <a href="/" class="flex items-center gap-3 font-display text-2xl">
+      <span class="inline-block rounded-full bg-lime-500 px-3 py-1 text-sm uppercase tracking-[0.3em] text-ink">Curations</span>
+      <span class="font-bold">Community Hub</span>
+    </a>
+    <nav class="hidden items-center gap-6 text-sm font-semibold uppercase tracking-[0.2em] sm:flex">
+      <NavLink href="/projects">Projects</NavLink>
+      <NavLink href="/ideas">Ideas</NavLink>
+      <NavLink href="/forum">Forum</NavLink>
+      <NavLink href="https://curations.org" external>CURATIONS.ORG</NavLink>
+      <NavLink href="https://gibber.curations.org" external>GIBBER</NavLink>
+      <NavLink href="https://la.curations.cc" external>CURATIONS LA</NavLink>
+    </nav>
+    <a
+      href="/ideas#submit"
+      class="rounded-full border-4 border-ink bg-fuchsia-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.25em] text-ink shadow-vibe transition hover:-translate-y-1"
+    >
+      Submit Idea
+    </a>
+  </div>
+</header>

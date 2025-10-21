@@ -1,0 +1,30 @@
+---
+import VoteButton from "./VoteButton.astro";
+const { project } = Astro.props;
+---
+<article class="gradient-border rounded-3xl border-4 border-ink bg-sand p-6 shadow-vibe">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h3 class="font-display text-2xl uppercase tracking-[0.25em]">{project.title}</h3>
+      <p class="text-sm text-ink/70">{project.tagline}</p>
+    </div>
+    <span class="rounded-full border-2 border-ink bg-lime-500 px-3 py-1 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+      {project.status}
+    </span>
+  </div>
+  <p class="mt-4 text-sm leading-relaxed text-ink/80">{project.description}</p>
+  <div class="mt-6 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em]">
+    {project.tags.map((tag) => (
+      <span class="rounded-full border border-ink px-3 py-1 text-ink" key={tag}>{tag}</span>
+    ))}
+  </div>
+  <div class="mt-6 flex flex-wrap items-center gap-4">
+    <a href={project.repo} class="rounded-full border-4 border-ink bg-ink px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-sand transition hover:-translate-y-1">
+      View Repo
+    </a>
+    <a href={project.slug ? `/projects/${project.slug}` : project.repo} class="rounded-full border-4 border-ink bg-fuchsia-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1">
+      Deep Dive
+    </a>
+    <VoteButton id={`project-${project.slug}`} initialCount={project.votes} />
+  </div>
+</article>

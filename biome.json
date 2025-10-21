@@ -1,0 +1,17 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.7.1/schema.json",
+  "formatter": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noUnusedVariables": "warn"
+      }
+    }
+  },
+  "files": {
+    "ignore": ["dist", "node_modules"]
+  }
+}

@@ -1,0 +1,16 @@
+---
+import VoteButton from "./VoteButton.astro";
+const { idea } = Astro.props;
+---
+<article class="rounded-3xl border-4 border-ink bg-white p-6 shadow-vibe">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <h3 class="font-display text-xl uppercase tracking-[0.25em] text-ink">{idea.title}</h3>
+    <VoteButton id={`idea-${idea.slug}`} initialCount={idea.votes} />
+  </div>
+  <p class="mt-4 text-sm leading-relaxed text-ink/80">{idea.description}</p>
+  <div class="mt-6 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.35em] text-ink/60">
+    {idea.categories.map((category) => (
+      <span class="rounded-full border border-dashed border-ink px-3 py-1" key={category}>{category}</span>
+    ))}
+  </div>
+</article>

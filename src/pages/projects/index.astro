@@ -1,0 +1,24 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import ProjectCard from "@components/ProjectCard.astro";
+import { projects } from "@data/projects";
+---
+<BaseLayout
+  title="CURATIONS Projects"
+  description="Card-based directory of Human × AI community builds."
+>
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <header class="mb-12 space-y-4">
+      <p class="text-xs uppercase tracking-[0.35em] text-ink/60">Open Source Showcase</p>
+      <h1 class="font-display text-5xl uppercase tracking-[0.35em]">Project Directory</h1>
+      <p class="max-w-3xl text-sm leading-relaxed text-ink/70">
+        Explore the builds powering the CURATIONS ecosystem. Each card links to live repos, status updates, and deep dives.
+      </p>
+    </header>
+    <div class="grid gap-8 md:grid-cols-2">
+      {projects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

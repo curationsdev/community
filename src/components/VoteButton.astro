@@ -1,0 +1,36 @@
+---
+const { id, initialCount = 0 } = Astro.props;
+const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
+---
+<button
+  class="group inline-flex items-center gap-2 rounded-full border-4 border-ink bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1"
+  data-id={id}
+  data-count={initialCount}
+  type="button"
+>
+  <span class="rounded-full bg-fuchsia-500 px-2 py-1 text-ink">▲</span>
+  <span class="vote-count">{initialCount}</span>
+</button>
+<script>
+  const endpoint = {JSON.stringify(endpoint)};
+  const button = document.currentScript?.previousElementSibling;
+  if (button instanceof HTMLButtonElement) {
+    button.addEventListener("click", async () => {
+      const id = button.dataset.id ?? "unknown";
+      const count = Number(button.dataset.count ?? "0");
+      button.dataset.count = String(count + 1);
+      const countEl = button.querySelector<HTMLElement>(".vote-count");
+      if (countEl) countEl.textContent = String(count + 1);
+
+      try {
+        await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
+      } catch (error) {
+        console.error("Vote error", error);
+      }
+    });
+  }
+</script>

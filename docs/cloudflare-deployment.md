@@ -135,22 +135,19 @@ Ensure GitHub secrets are configured (see Part 3).
 
 ## Part 5: Bind Worker to Pages
 
-To connect the Worker endpoints to your Pages deployment:
+## Part 5: Connect Worker API Endpoints to Pages
+
+To route API calls from your Pages deployment to the Worker:
 
 1. Go to Cloudflare Dashboard → **Workers & Pages**
 2. Select your Pages project (`curations-community`)
 3. Go to **Settings** → **Functions**
-4. Under **Service bindings**, add:
-   - Variable name: `WORKER`
-   - Service: `curations-community` (your worker name)
+4. Under **Routes**, add a new route:
+   - Route: `/api/*`
+   - Target: `curations-community` (your worker name)
    - Environment: `production`
 
-Alternatively, you can use [Routes](https://developers.cloudflare.com/pages/functions/routing/) to route API calls:
-
-1. In Pages project → **Settings** → **Functions**
-2. Add route patterns:
-   - `/api/*` → Forward to Worker
-
+This configuration ensures that all requests to `/api/*` on your Pages domain are forwarded to your deployed Worker.
 ## Part 6: Configure Custom Domain (When Ready)
 
 Once the domain transfer is complete:

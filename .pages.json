@@ -1,0 +1,23 @@
+{
+  "$schema": "https://developers.cloudflare.com/pages/platform/project-schema.json",
+  "build": {
+    "command": "npm run build",
+    "output_directory": "dist",
+    "environment_variables": {
+      "NODE_VERSION": "20",
+      "PUBLIC_VOTE_ENDPOINT": "/api/vote",
+      "PUBLIC_IDEA_ENDPOINT": "/api/idea",
+      "PUBLIC_FORUM_ENDPOINT": "/api/forum"
+    }
+  },
+  "deployment_configs": {
+    "production": {
+      "compatibility_date": "2024-05-11",
+      "compatibility_flags": []
+    },
+    "preview": {
+      "compatibility_date": "2024-05-11",
+      "compatibility_flags": []
+    }
+  }
+}

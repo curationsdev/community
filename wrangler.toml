@@ -2,6 +2,11 @@ name = "curations-community"
 main = "cloudflare/worker.ts"
 compatibility_date = "2024-05-11"
 
+# Development environment configuration
+# Note: KV namespace IDs will be created during deployment
+# Run: npx wrangler kv:namespace create CURATIONS_VOTES
+# Run: npx wrangler kv:namespace create CURATIONS_IDEAS
+
 [vars]
 PUBLIC_VOTE_ENDPOINT = "/api/vote"
 PUBLIC_IDEA_ENDPOINT = "/api/idea"
@@ -16,5 +21,26 @@ binding = "CURATIONS_IDEAS"
 id = "<to-be-created>"
 
 [[durable_objects.bindings]]
+name = "CURATIONS_FORUM"
+class_name = "ForumDurableObject"
+
+# Enable Durable Objects migration
+[[migrations]]
+tag = "v1"
+new_classes = ["ForumDurableObject"]
+
+# Development environment overrides
+[env.dev]
+name = "curations-community-dev"
+
+[[env.dev.kv_namespaces]]
+binding = "CURATIONS_VOTES"
+id = "<dev-to-be-created>"
+
+[[env.dev.kv_namespaces]]
+binding = "CURATIONS_IDEAS"
+id = "<dev-to-be-created>"
+
+[[env.dev.durable_objects.bindings]]
 name = "CURATIONS_FORUM"
 class_name = "ForumDurableObject"

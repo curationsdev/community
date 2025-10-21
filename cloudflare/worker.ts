@@ -27,7 +27,10 @@ export default {
 
     if (url.pathname === "/api/vote" && request.method === "POST") {
       const payload = (await request.json()) as VotePayload;
-      const key = payload.id ?? "unknown";
+      if (!payload.id) {
+        return Response.json({ error: "Missing 'id' in vote payload" }, { status: 400 });
+      }
+      const key = payload.id;
       const current = Number((await env.CURATIONS_VOTES.get(key)) ?? "0");
       const total = current + 1;
       await env.CURATIONS_VOTES.put(key, String(total));

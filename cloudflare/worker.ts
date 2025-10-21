@@ -96,9 +96,7 @@ export class ForumDurableObject {
       return Response.json(posts);
     }
 
-    const allKeys = await storage.list<ForumPayload[]>({
-      start: undefined,
-    });
+    const allKeys = await storage.list<ForumPayload[]>({});
     const result = Array.from(allKeys.entries()).map(([channel, posts]) => ({ channel, posts }));
     return Response.json(result);
   }

@@ -1,6 +1,12 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getProjectBySlug } from "@data/projects";
+import { getProjectBySlug, projects } from "@data/projects";
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+  }));
+}
 
 const { slug } = Astro.params;
 const project = slug ? getProjectBySlug(slug) : undefined;

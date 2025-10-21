@@ -1,0 +1,20 @@
+name = "curations-community"
+main = "cloudflare/worker.ts"
+compatibility_date = "2024-05-11"
+
+[vars]
+PUBLIC_VOTE_ENDPOINT = "/api/vote"
+PUBLIC_IDEA_ENDPOINT = "/api/idea"
+PUBLIC_FORUM_ENDPOINT = "/api/forum"
+
+[[kv_namespaces]]
+binding = "CURATIONS_VOTES"
+id = "<to-be-created>"
+
+[[kv_namespaces]]
+binding = "CURATIONS_IDEAS"
+id = "<to-be-created>"
+
+[[durable_objects.bindings]]
+name = "CURATIONS_FORUM"
+class_name = "ForumDurableObject"

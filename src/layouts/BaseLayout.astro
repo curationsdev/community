@@ -1,0 +1,39 @@
+---
+import "@styles/global.css";
+import SiteHeader from "@components/SiteHeader.astro";
+import SiteFooter from "@components/SiteFooter.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const { title = "CURATIONS Community", description = "Human × AI collaboration hub", ogImage = "/og-default.svg" } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en" class="bg-sand">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="bg-sand text-ink">
+    <div class="min-h-screen flex flex-col">
+      <SiteHeader />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

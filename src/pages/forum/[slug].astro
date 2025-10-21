@@ -1,0 +1,95 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getChannelBySlug } from "@data/forum";
+
+const { slug } = Astro.params;
+const channel = slug ? getChannelBySlug(slug) : undefined;
+
+if (!channel) {
+  throw new Error(`Channel ${slug} not found`);
+}
+---
+<BaseLayout title={`#${channel.slug} – CURATIONS Forum`} description={channel.description}>
+  <section class="border-b-4 border-ink bg-ink text-sand">
+    <div class="mx-auto max-w-4xl px-6 py-16">
+      <h1 class="font-display text-4xl uppercase tracking-[0.35em]">#{channel.slug}</h1>
+      <p class="mt-4 text-sm leading-relaxed text-sand/80">{channel.description}</p>
+    </div>
+  </section>
+  <section class="mx-auto max-w-4xl px-6 py-12">
+    <div class="space-y-6">
+      {channel.posts.map((post) => (
+        <article class="rounded-3xl border-4 border-ink bg-white p-6 shadow-vibe" key={post.id}>
+          <header class="flex flex-wrap items-center justify-between gap-4">
+            <h2 class="font-display text-2xl uppercase tracking-[0.3em] text-ink">{post.title}</h2>
+            <span class="rounded-full border-2 border-ink px-3 py-1 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+              {post.likes} Likes
+            </span>
+          </header>
+          <p class="mt-4 text-sm text-ink/70">{post.excerpt}</p>
+          <footer class="mt-6 text-xs uppercase tracking-[0.25em] text-ink/60">
+            Posted by {post.author}
+          </footer>
+        </article>
+      ))}
+    </div>
+    <div class="mt-12 rounded-3xl border-4 border-dashed border-ink bg-white p-8">
+      <h2 class="font-display text-xl uppercase tracking-[0.3em]">Start a new thread</h2>
+      <p class="mt-3 text-sm text-ink/70">
+        This form will connect to the Durable Object worker at <code>/api/forum</code> to create posts once the backend is wired up.
+      </p>
+      <form class="mt-6 space-y-4" data-endpoint={import.meta.env.PUBLIC_FORUM_ENDPOINT ?? "/api/forum"}>
+        <input type="hidden" name="channel" value={channel.slug} />
+        <label class="block text-xs font-bold uppercase tracking-[0.3em] text-ink">
+          Title
+          <input type="text" name="title" required class="mt-2 w-full rounded-xl border-2 border-ink bg-white px-4 py-3" />
+        </label>
+        <label class="block text-xs font-bold uppercase tracking-[0.3em] text-ink">
+          Message
+          <textarea name="message" required rows="5" class="mt-2 w-full rounded-xl border-2 border-ink bg-white px-4 py-3"></textarea>
+        </label>
+        <label class="block text-xs font-bold uppercase tracking-[0.3em] text-ink">
+          Display Name
+          <input type="text" name="author" placeholder="Anonymous" class="mt-2 w-full rounded-xl border-2 border-ink bg-white px-4 py-3" />
+        </label>
+        <button type="submit" class="rounded-full border-4 border-ink bg-lime-500 px-6 py-3 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+          Post Thread
+        </button>
+        <p class="form-status text-xs uppercase tracking-[0.25em] text-ink/60"></p>
+      </form>
+    </div>
+  </section>
+  <script>
+    const form = document.currentScript?.previousElementSibling?.querySelector("form");
+    if (form instanceof HTMLFormElement) {
+      const status = form.querySelector<HTMLElement>(".form-status");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const endpoint = form.dataset.endpoint ?? "/api/forum";
+        const formData = new FormData(form);
+        const payload = {
+          channel: formData.get("channel"),
+          title: formData.get("title"),
+          message: formData.get("message"),
+          author: formData.get("author") || "Anonymous",
+        };
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (response.ok) {
+            form.reset();
+            if (status) status.textContent = "Thread submitted!";
+          } else {
+            if (status) status.textContent = "Something went wrong.";
+          }
+        } catch (error) {
+          console.error(error);
+          if (status) status.textContent = "Offline? Try later.";
+        }
+      });
+    }
+  </script>
+</BaseLayout>

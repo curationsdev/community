@@ -1,0 +1,59 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Hero from "@components/Hero.astro";
+import ProjectCard from "@components/ProjectCard.astro";
+import IdeaCard from "@components/IdeaCard.astro";
+import ForumChannelCard from "@components/ForumChannelCard.astro";
+import { projects } from "@data/projects";
+import { ideas } from "@data/ideas";
+import { channels } from "@data/forum";
+---
+<BaseLayout
+  title="CURATIONS Community Hub"
+  description="Live collaboration hub for Human × AI projects, prompts, and feedback."
+>
+  <Hero />
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <div class="mb-10 flex items-center justify-between">
+      <h2 class="font-display text-4xl uppercase tracking-[0.35em]">Open Source Spotlight</h2>
+      <a href="/projects" class="rounded-full border-4 border-ink bg-lime-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+        View All
+      </a>
+    </div>
+    <div class="grid gap-8 md:grid-cols-2">
+      {projects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y-4 border-ink bg-ink text-sand">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+      <div class="mb-10 flex items-center justify-between">
+        <h2 class="font-display text-4xl uppercase tracking-[0.35em]">Idea Pools</h2>
+        <a href="/ideas" class="rounded-full border-4 border-sand px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-sand">
+          Submit Idea
+        </a>
+      </div>
+      <div class="grid gap-8 md:grid-cols-2">
+        {ideas.map((idea) => (
+          <IdeaCard idea={idea} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <div class="mb-10 flex items-center justify-between">
+      <h2 class="font-display text-4xl uppercase tracking-[0.35em]">Community Forum</h2>
+      <a href="/forum" class="rounded-full border-4 border-ink bg-fuchsia-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+        Enter Forum
+      </a>
+    </div>
+    <div class="grid gap-8 md:grid-cols-2">
+      {channels.map((channel) => (
+        <ForumChannelCard channel={channel} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

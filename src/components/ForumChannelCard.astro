@@ -1,0 +1,26 @@
+---
+const { channel } = Astro.props;
+---
+<article class="rounded-3xl border-4 border-ink bg-white p-6 shadow-vibe">
+  <div class="flex items-center justify-between">
+    <h3 class="font-display text-2xl uppercase tracking-[0.3em] text-ink">#{channel.slug}</h3>
+    <span class="rounded-full border-2 border-ink px-3 py-1 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+      {channel.posts.length} Threads
+    </span>
+  </div>
+  <p class="mt-4 text-sm text-ink/80">{channel.description}</p>
+  <ul class="mt-6 space-y-3 text-sm text-ink/80">
+    {channel.posts.slice(0, 3).map((post) => (
+      <li key={post.id} class="rounded-2xl border border-dashed border-ink px-4 py-3">
+        <p class="font-semibold uppercase tracking-[0.3em]">{post.title}</p>
+        <p class="text-xs uppercase tracking-[0.25em] text-ink/60">By {post.author}</p>
+      </li>
+    ))}
+  </ul>
+  <a
+    href={`/forum/${channel.slug}`}
+    class="mt-6 inline-flex items-center rounded-full border-4 border-ink bg-lime-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1"
+  >
+    Enter Channel
+  </a>
+</article>

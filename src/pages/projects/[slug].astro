@@ -1,0 +1,50 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getProjectBySlug } from "@data/projects";
+
+const { slug } = Astro.params;
+const project = slug ? getProjectBySlug(slug) : undefined;
+
+if (!project) {
+  throw new Error(`Project ${slug} not found`);
+}
+---
+<BaseLayout
+  title={`${project.title} – CURATIONS Project`}
+  description={project.tagline}
+>
+  <section class="mx-auto max-w-4xl px-6 py-16">
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <h1 class="font-display text-5xl uppercase tracking-[0.35em]">{project.title}</h1>
+        <span class="rounded-full border-4 border-ink bg-lime-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+          {project.status}
+        </span>
+      </div>
+      <p class="text-lg text-ink/70">{project.description}</p>
+      <div class="flex flex-wrap gap-3 text-xs uppercase tracking-[0.3em] text-ink/70">
+        {project.tags.map((tag) => (
+          <span class="rounded-full border border-ink px-3 py-1" key={tag}>{tag}</span>
+        ))}
+      </div>
+      <div class="flex flex-wrap gap-4">
+        <a href={project.repo} class="rounded-full border-4 border-ink bg-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.3em] text-sand">
+          Open Repository
+        </a>
+        {project.links?.map((link) => (
+          <a
+            href={link.url}
+            class="rounded-full border-4 border-ink bg-fuchsia-500 px-5 py-3 text-xs font-bold uppercase tracking-[0.3em] text-ink"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+      {project.bodyHtml ? (
+        <article class="prose prose-headings:font-display prose-p:text-ink/80 max-w-none rounded-3xl border-4 border-ink bg-white p-8">
+          <div set:html={project.bodyHtml} />
+        </article>
+      ) : null}
+    </div>
+  </section>
+</BaseLayout>

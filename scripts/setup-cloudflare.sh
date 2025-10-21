@@ -19,7 +19,7 @@ echo ""
 
 # Production namespaces
 echo "Creating production CURATIONS_VOTES namespace..."
-VOTES_PROD=$(npx wrangler kv:namespace create CURATIONS_VOTES --json | grep -o '"id":"[^"]*' | sed 's/"id":"//')
+VOTES_PROD=$(npx wrangler kv:namespace create CURATIONS_VOTES --json | jq -r '.id')
 echo "✅ Created: $VOTES_PROD"
 
 echo "Creating production CURATIONS_IDEAS namespace..."

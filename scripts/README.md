@@ -62,8 +62,8 @@ chmod +x scripts/setup-cloudflare.sh
 
 **Wrangler not found:**
 ```bash
-npm install -g wrangler
-wrangler login
+npm install
+npx wrangler login
 ```
 
 **KV namespace creation fails:**

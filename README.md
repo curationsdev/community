@@ -63,6 +63,12 @@ For detailed deployment instructions, see [`docs/cloudflare-deployment.md`](docs
 3. Deploy Worker: `npx wrangler deploy`
 4. Connect repo to Cloudflare Pages via dashboard
 
+## Documentation
+
+- **[Quick Start Guide](docs/QUICKSTART.md)** - Fast-track deployment to Cloudflare
+- **[Deployment Guide](docs/cloudflare-deployment.md)** - Comprehensive Cloudflare setup
+- **[GitHub Integrations](docs/github-integrations.md)** - Available automation tools and connectors
+
 ## Automation, Agents & Connectors
 
 - Browse the catalog in [`docs/github-integrations.md`](docs/github-integrations.md) for GitHub Apps, AI models, and workflow connectors ready to enable.

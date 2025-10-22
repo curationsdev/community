@@ -9,8 +9,9 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
   data-vote-button
   type="button"
 >
-  <span class="rounded-full bg-fuchsia-500 px-2 py-1 text-ink">▲</span>
+  <span class="vote-arrow rounded-full bg-fuchsia-500 px-2 py-1 text-ink transition-transform">▲</span>
   <span class="vote-count" aria-live="polite" role="status">{initialCount}</span>
+  <span class="loading-spinner hidden">⟳</span>
 </button>
 <script lang="ts">
   const endpoint = {JSON.stringify(endpoint)};
@@ -33,12 +34,32 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
         if (countEl) countEl.textContent = String(next);
       };
 
+      const showLoading = (show: boolean) => {
+        const spinner = button.querySelector<HTMLElement>(".loading-spinner");
+        const arrow = button.querySelector<HTMLElement>(".vote-arrow");
+        if (spinner && arrow) {
+          if (show) {
+            spinner.classList.remove("hidden");
+            arrow.style.transform = "scale(1.2) rotate(180deg)";
+          } else {
+            spinner.classList.add("hidden");
+            arrow.style.transform = "";
+          }
+        }
+      };
+
       const count = Number(button.dataset.count ?? "0");
       const next = count + 1;
+      
+      // Optimistic update with visual feedback
       updateCount(next);
-
+      showLoading(true);
       button.disabled = true;
       button.setAttribute("aria-busy", "true");
+      
+      // Add bounce animation
+      button.style.transform = "scale(1.1)";
+      setTimeout(() => button.style.transform = "", 150);
 
       try {
         const response = await fetch(endpoint, {
@@ -50,10 +71,25 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
         if (!response.ok) {
           throw new Error(`Vote request failed with status ${response.status}`);
         }
+        
+        // Success feedback
+        const arrow = button.querySelector<HTMLElement>(".vote-arrow");
+        if (arrow) {
+          arrow.style.backgroundColor = "#10b981"; // green
+          setTimeout(() => arrow.style.backgroundColor = "", 1000);
+        }
       } catch (error) {
         console.error("Vote error", error);
         updateCount(count);
+        
+        // Error feedback
+        const arrow = button.querySelector<HTMLElement>(".vote-arrow");
+        if (arrow) {
+          arrow.style.backgroundColor = "#ef4444"; // red
+          setTimeout(() => arrow.style.backgroundColor = "", 1000);
+        }
       } finally {
+        showLoading(false);
         button.disabled = false;
         button.removeAttribute("aria-busy");
       }

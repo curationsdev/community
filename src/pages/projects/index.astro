@@ -26,7 +26,7 @@ import { projects } from "@data/projects";
     // Load live vote counts for all projects
     async function loadLiveVotes() {
       try {
-        const response = await fetch('/api/votes');
+        const response = await fetch('/api/votes?' + Date.now()); // Cache bust
         if (response.ok) {
           const votes = await response.json();
           
@@ -36,8 +36,23 @@ import { projects } from "@data/projects";
             if (id && votes[id] !== undefined) {
               const countEl = button.querySelector('.vote-count');
               const currentCount = votes[id];
+              const oldCount = Number(button.dataset.count || '0');
+              
               button.dataset.count = String(currentCount);
               if (countEl) countEl.textContent = String(currentCount);
+              
+              // Highlight if count increased
+              if (currentCount > oldCount) {
+                const arrow = button.querySelector('.vote-arrow');
+                if (arrow) {
+                  arrow.style.backgroundColor = '#10b981';
+                  arrow.style.transform = 'scale(1.2)';
+                  setTimeout(() => {
+                    arrow.style.backgroundColor = '';
+                    arrow.style.transform = '';
+                  }, 800);
+                }
+              }
             }
           });
         }
@@ -46,11 +61,36 @@ import { projects } from "@data/projects";
       }
     }
 
+    // Auto-refresh every 15 seconds
+    let refreshInterval;
+    
+    function startAutoRefresh() {
+      refreshInterval = setInterval(loadLiveVotes, 15000);
+    }
+    
+    function stopAutoRefresh() {
+      if (refreshInterval) clearInterval(refreshInterval);
+    }
+    
+    // Start auto-refresh when page is visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopAutoRefresh();
+      } else {
+        startAutoRefresh();
+        loadLiveVotes(); // Refresh immediately when returning
+      }
+    });
+
     // Load data when page is ready
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadLiveVotes);
+      document.addEventListener('DOMContentLoaded', () => {
+        loadLiveVotes();
+        startAutoRefresh();
+      });
     } else {
       loadLiveVotes();
+      startAutoRefresh();
     }
   </script>
 </BaseLayout>

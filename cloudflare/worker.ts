@@ -21,21 +21,54 @@ interface ForumPayload {
   author?: string;
 }
 
+// CORS headers for API responses
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Max-Age': '86400',
+};
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        headers: corsHeaders,
+      });
+    }
 
     // Handle vote POST (increment)
     if (url.pathname === "/api/vote" && request.method === "POST") {
       const payload = (await request.json()) as VotePayload;
       if (!payload.id) {
-        return Response.json({ error: "Missing 'id' in vote payload" }, { status: 400 });
+        return new Response(
+          JSON.stringify({ error: "Missing 'id' in vote payload" }),
+          {
+            status: 400,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders,
+            },
+          }
+        );
       }
       const key = payload.id;
       const current = Number((await env.CURATIONS_VOTES.get(key)) ?? "0");
       const total = current + 1;
       await env.CURATIONS_VOTES.put(key, String(total));
-      return Response.json({ id: key, votes: total });
+      return new Response(
+        JSON.stringify({ id: key, votes: total }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders,
+          },
+        }
+      );
     }
 
     // Handle vote GET (fetch current counts)
@@ -54,10 +87,28 @@ export default {
           })
         );
         
-        return Response.json(votes);
+        return new Response(
+          JSON.stringify(votes),
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders,
+            },
+          }
+        );
       } catch (error) {
         console.error('Error fetching votes:', error);
-        return Response.json({ error: 'Failed to fetch votes' }, { status: 500 });
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch votes' }),
+          {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json',
+              ...corsHeaders,
+            },
+          }
+        );
       }
     }
 
@@ -65,7 +116,16 @@ export default {
     if (url.pathname.startsWith("/api/vote/") && request.method === "GET") {
       const id = url.pathname.split("/api/vote/")[1];
       const count = await env.CURATIONS_VOTES.get(id);
-      return Response.json({ id, count: count ? Number(count) : 0, exists: count !== null });
+      return new Response(
+        JSON.stringify({ id, count: count ? Number(count) : 0, exists: count !== null }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders,
+          },
+        }
+      );
     }
 
     // Handle idea POST (create new)
@@ -81,7 +141,16 @@ export default {
         createdAt: new Date().toISOString(),
       };
       await env.CURATIONS_IDEAS.put(id, JSON.stringify(record));
-      return Response.json(record, { status: 201 });
+      return new Response(
+        JSON.stringify(record),
+        {
+          status: 201,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders,
+          },
+        }
+      );
     }
 
     // Handle ideas GET (fetch all)
@@ -94,16 +163,46 @@ export default {
           ideas.push(JSON.parse(data));
         }
       }
-      return Response.json(ideas.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+      return new Response(
+        JSON.stringify(ideas.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders,
+          },
+        }
+      );
     }
 
     if (url.pathname.startsWith("/api/forum")) {
       const id = env.CURATIONS_FORUM.idFromName("curations-forum");
       const stub = env.CURATIONS_FORUM.get(id);
-      return stub.fetch(request);
+      const response = await stub.fetch(request);
+      
+      // Add CORS headers to forum responses
+      const newHeaders = new Headers(response.headers);
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        newHeaders.set(key, value);
+      });
+      
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: newHeaders,
+      });
     }
 
-    return new Response("Not found", { status: 404 });
+    return new Response(
+      JSON.stringify({ error: "Not found" }),
+      {
+        status: 404,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+        },
+      }
+    );
   },
 };
 
@@ -132,17 +231,41 @@ export class ForumDurableObject {
       };
       posts.push(entry);
       await storage.put(channel, posts);
-      return Response.json(entry, { status: 201 });
+      return new Response(
+        JSON.stringify(entry),
+        {
+          status: 201,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
     }
 
     if (url.searchParams.has("channel")) {
       const channel = url.searchParams.get("channel") ?? "general";
       const posts = ((await storage.get<ForumPayload[]>(channel)) ?? []) as ForumPayload[];
-      return Response.json(posts);
+      return new Response(
+        JSON.stringify(posts),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
     }
 
     const allKeys = await storage.list<ForumPayload[]>({});
     const result = Array.from(allKeys.entries()).map(([channel, posts]) => ({ channel, posts }));
-    return Response.json(result);
+    return new Response(
+      JSON.stringify(result),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   }
 }

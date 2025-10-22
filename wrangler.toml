@@ -2,6 +2,16 @@ name = "curations-community"
 main = "cloudflare/worker.ts"
 compatibility_date = "2024-05-11"
 
+# DEPLOYMENT NOTE:
+# The API is now handled by Cloudflare Pages Functions (functions/api/[[path]].ts)
+# This standalone Worker configuration is kept for:
+# - Development and testing with `wrangler dev`
+# - Backup/alternative deployment if needed
+# - Local development workflow
+#
+# For production deployment to Pages, configure KV bindings in the
+# Cloudflare Pages dashboard under Settings → Functions
+
 # Development environment configuration
 # Note: KV namespace IDs will be created during deployment
 # Run: npx wrangler kv:namespace create CURATIONS_VOTES

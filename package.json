@@ -9,7 +9,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "format": "prettier --write .",
-    "lint": "biome lint"
+    "lint": "biome lint",
+    "deploy:worker": "wrangler deploy",
+    "deploy:worker:dev": "wrangler deploy --env dev",
+    "wrangler": "wrangler"
   },
   "dependencies": {
     "@astrojs/mdx": "^3.1.0",
@@ -20,8 +23,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.7.1",
+    "@cloudflare/workers-types": "^4.20251014.0",
     "prettier": "^3.3.2",
     "prettier-plugin-astro": "^0.14.0",
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "^3.4.4",
+    "wrangler": "^4.44.0"
   }
 }

@@ -6,3 +6,7 @@ dist
 .mjs.map
 .vscode
 .idea
+
+# Build artifacts
+.astro/
+package-lock.json

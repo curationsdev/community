@@ -11,8 +11,7 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
   <span class="rounded-full bg-fuchsia-500 px-2 py-1 text-ink">▲</span>
   <span class="vote-count">{initialCount}</span>
 </button>
-<script>
-  const endpoint = {JSON.stringify(endpoint)};
+<script define:vars={{ endpoint }}>
   const button = document.currentScript?.previousElementSibling;
   if (button instanceof HTMLButtonElement) {
     button.addEventListener("click", async () => {

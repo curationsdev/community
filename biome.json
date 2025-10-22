@@ -6,9 +6,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "style": {
-        "noUnusedVariables": "warn"
-      }
+      "recommended": true
     }
   },
   "files": {

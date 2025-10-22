@@ -51,11 +51,13 @@ The Astro app reads public endpoints exposed by the Worker. When deploying to Cl
 
 **Live Infrastructure:**
 - **Static Site**: Cloudflare Pages (`curations.dev`)
-- **API Layer**: Cloudflare Workers (`curations.dev/api/*`)
+- **API Layer**: Cloudflare Pages Functions (`curations.dev/api/*`)
 - **Storage**: KV Namespaces for votes and ideas
 - **Domain**: Single domain setup for simplicity
 
 **Current Status:** ✅ Fully deployed and operational
+
+**Recent Fix (2025-10-22):** API integration issue resolved. API endpoints now use Cloudflare Pages Functions instead of separate Worker. See [`docs/API_INTEGRATION_FIX.md`](docs/API_INTEGRATION_FIX.md) for details.
 
 ### Quick Start
 

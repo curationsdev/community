@@ -2,6 +2,8 @@
 
 This is a condensed guide specifically for deploying to the `wyatt.stephens@curations.cc` Cloudflare account.
 
+> **🔧 API Fix Applied (2025-10-22):** This deployment now uses Cloudflare Pages Functions for API integration. See [`API_INTEGRATION_FIX.md`](./API_INTEGRATION_FIX.md) for details about the fix.
+
 ## Prerequisites Checklist
 
 - [x] Repository is public
@@ -105,15 +107,53 @@ Commit and push this change.
    ```
 8. Click "Save and Deploy"
 
-### 5. Deploy Worker (Automatic)
+### 5. Configure KV Bindings in Pages (CRITICAL - 3 minutes)
 
-Once you merge to `main` branch, the GitHub Actions workflow will automatically:
-- Deploy the Worker with Durable Objects
-- Deploy the Astro site to Cloudflare Pages
+**This step is required for API functionality!**
+
+After Pages deployment completes:
+
+1. Go to your Pages project in Cloudflare Dashboard
+2. Click **Settings** tab
+3. Scroll to **Functions** section
+4. Click **KV namespace bindings** → **Add binding**
+5. Add these bindings:
+
+**First Binding:**
+- Variable name: `CURATIONS_VOTES`
+- KV namespace: Select `curations-community-CURATIONS_VOTES`
+- Click **Save**
+
+**Second Binding:**
+- Variable name: `CURATIONS_IDEAS`
+- KV namespace: Select `curations-community-CURATIONS_IDEAS`
+- Click **Save**
+
+> 📖 **Detailed guide:** See [`PAGES_KV_SETUP.md`](./PAGES_KV_SETUP.md) for screenshots and troubleshooting.
+
+### 6. Redeploy Pages (1 minute)
+
+After adding KV bindings:
+
+1. Go to **Deployments** tab
+2. Click **Retry deployment** on the latest deployment
+3. Wait for deployment to complete (~2 minutes)
+
+This ensures the Functions have access to KV namespaces.
+
+### 7. Deploy Worker (Optional)
+
+The Worker is now optional since API is handled by Pages Functions. If you still want to deploy it:
+
+```bash
+npx wrangler deploy
+```
+
+Or wait for GitHub Actions to deploy automatically on merge to `main`.
 
 Watch the progress at: https://github.com/curationsdev/community/actions
 
-### 6. Access Your Dev Environment
+### 8. Access Your Environment
 
 After deployment completes:
 
@@ -124,12 +164,14 @@ After deployment completes:
 Check deployment details in:
 - Cloudflare Dashboard → Workers & Pages → curations-community
 
-**Worker API:** The API endpoints will be available at:
-- `https://curations-community.pages.dev/api/vote`
-- `https://curations-community.pages.dev/api/idea`
-- `https://curations-community.pages.dev/api/forum`
+**API Endpoints:** Via Pages Functions, available at:
+- `https://curations-community.pages.dev/api/vote` - POST to vote
+- `https://curations-community.pages.dev/api/votes` - GET vote counts
+- `https://curations-community.pages.dev/api/idea` - POST to submit idea
+- `https://curations-community.pages.dev/api/ideas` - GET all ideas
+- `https://curations-community.pages.dev/api/forum` - Forum endpoints (optional)
 
-### 7. Configure Custom Domain (When Ready)
+### 9. Configure Custom Domain (When Ready)
 
 After the domain transfer completes:
 
@@ -143,9 +185,17 @@ After the domain transfer completes:
 After deployment, verify:
 
 - [ ] Site loads at Pages URL
-- [ ] Vote buttons are clickable (check browser console for errors)
+- [ ] KV bindings are configured (Settings → Functions)
+- [ ] API responds: `curl https://[your-url]/api/votes` returns `{}`
+- [ ] Vote buttons work (click and see count increment)
+- [ ] Idea submission works (form on /ideas page)
 - [ ] Forum pages render correctly
-- [ ] Projects page shows all projects
+- [ ] Browser console shows no API errors
+
+**If API doesn't work:**
+1. Check KV bindings are set (Step 5)
+2. Check Functions logs: Deployments → Click deployment → Functions log
+3. See troubleshooting in [`API_INTEGRATION_FIX.md`](./API_INTEGRATION_FIX.md)
 - [ ] Ideas page is accessible
 - [ ] GitHub Actions workflows complete successfully
 

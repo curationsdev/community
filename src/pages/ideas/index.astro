@@ -261,6 +261,21 @@ import BaseLayout from "@layouts/BaseLayout.astro";
         }
       } catch (error) {
         console.error('Failed to load live ideas:', error);
+        const container = document.getElementById('ideas-container');
+        if (container) {
+          container.innerHTML = `
+            <div class="text-center py-12">
+              <div class="rounded-3xl border-4 border-dashed border-ink bg-white p-8">
+                <h3 class="font-display text-xl uppercase tracking-[0.3em] text-ink">Live ideas are offline</h3>
+                <p class="mt-2 text-sm text-ink/70">We couldn't reach the API right now. You can still submit a new idea using the form below.</p>
+                <button onclick="document.getElementById('submit').scrollIntoView({behavior: 'smooth'})"
+                        class="mt-4 rounded-full border-4 border-ink bg-fuchsia-500 px-6 py-3 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+                  Jump to submission form
+                </button>
+              </div>
+            </div>
+          `;
+        }
       }
     }
 

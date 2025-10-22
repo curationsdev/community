@@ -1,91 +1,87 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import Hero from "@components/Hero.astro";
-import ProjectCard from "@components/ProjectCard.astro";
-import IdeaCard from "@components/IdeaCard.astro";
-import ForumChannelCard from "@components/ForumChannelCard.astro";
-import { projects } from "@data/projects";
-import { ideas } from "@data/ideas";
-import { channels } from "@data/forum";
 ---
 <BaseLayout
-  title="CURATIONS Community Hub"
-  description="Live collaboration hub for Human × AI projects, prompts, and feedback at curations.dev"
+  title="CURATIONS.DEV Community Home"
+  description="Human × AI creative collaboration for people who curate with heart."
 >
-  <Hero />
-  <section class="mx-auto max-w-6xl px-6 py-16">
-    <div class="mb-10 flex items-center justify-between">
-      <h2 class="font-display text-4xl uppercase tracking-[0.35em]">Open Source Spotlight</h2>
-      <a href="/projects" class="rounded-full border-4 border-ink bg-lime-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink">
-        View All
-      </a>
+  <div class="mx-auto max-w-4xl px-6 py-16">
+    <!-- Header -->
+    <div class="mb-12 text-center">
+      <img src="https://curations.org/favicon.svg" alt="CURATIONS logo" class="mx-auto mb-6 h-24 w-24" />
+      <p class="text-xl font-semibold">Human × AI creative collaboration for people who curate with heart.</p>
     </div>
-    <div class="grid gap-8 md:grid-cols-2">
-      {projects.map((project) => (
-        <ProjectCard project={project} />
-      ))}
-    </div>
-  </section>
 
-  <section class="border-y-4 border-ink bg-ink text-sand">
-    <div class="mx-auto max-w-6xl px-6 py-16">
-      <div class="mb-10 flex items-center justify-between">
-        <h2 class="font-display text-4xl uppercase tracking-[0.35em]">Idea Pools</h2>
-        <a href="/ideas" class="rounded-full border-4 border-sand px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-sand">
-          Submit Idea
-        </a>
+    <!-- Welcome -->
+    <div class="prose prose-lg mb-12 max-w-none">
+      <p>Welcome to the home base for the <strong>CURATIONS.DEV</strong> open-source community. This page mirrors the warmth and clarity we bring to every campaign at <a href="https://curations.org" class="text-lime-600 hover:underline">CURATIONS.ORG — "We curate the heart of brands."</a> Discover how we blend human insight with AI intuition, then dive into the spaces where the work truly happens.</p>
+    </div>
+
+    <!-- Start Here Section -->
+    <section class="mb-12">
+      <h2 class="mb-6 text-3xl font-bold">✨ Start Here</h2>
+      <div class="overflow-hidden rounded-lg border-4 border-ink">
+        <table class="w-full">
+          <thead class="bg-ink text-sand">
+            <tr>
+              <th class="px-6 py-3 text-left font-bold">Destination</th>
+              <th class="px-6 py-3 text-left font-bold">Why it matters</th>
+            </tr>
+          </thead>
+          <tbody class="bg-sand">
+            <tr class="border-t-2 border-ink">
+              <td class="px-6 py-4"><a href="https://curations.dev" class="font-semibold text-lime-600 hover:underline">curations.dev</a></td>
+              <td class="px-6 py-4">The polished launchpad for community members and collaborators. Bookmark it!</td>
+            </tr>
+            <tr class="border-t-2 border-ink">
+              <td class="px-6 py-4"><a href="https://github.com/curationsdev/community/wiki" class="font-semibold text-lime-600 hover:underline">Community Wiki</a></td>
+              <td class="px-6 py-4">Living documentation with playbooks, briefs, and automations you can remix.</td>
+            </tr>
+            <tr class="border-t-2 border-ink">
+              <td class="px-6 py-4"><a href="https://github.com/curationsdev/community/discussions" class="font-semibold text-lime-600 hover:underline">Discussions</a></td>
+              <td class="px-6 py-4">Meet the crew, pitch ideas, and log creative experiments in public.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="grid gap-8 md:grid-cols-2">
-        {ideas.map((idea) => (
-          <IdeaCard idea={idea} />
-        ))}
+      <div class="mt-4 rounded-lg bg-lime-100 p-4 border-2 border-lime-600">
+        <p class="text-sm"><strong>Tip:</strong> New to the collective? Introduce yourself in Discussions and pick a starter brief from the Wiki.</p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="mx-auto max-w-6xl px-6 py-16">
-    <div class="mb-10 flex items-center justify-between">
-      <h2 class="font-display text-4xl uppercase tracking-[0.35em]">Community Forum</h2>
-      <a href="/forum" class="rounded-full border-4 border-ink bg-fuchsia-500 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink">
-        Enter Forum
-      </a>
-    </div>
-    <div class="grid gap-8 md:grid-cols-2">
-      {channels.map((channel) => (
-        <ForumChannelCard channel={channel} />
-      ))}
-    </div>
-  </section>
-  
-  <script>
-    // Load live vote counts on page load
-    async function loadLiveData() {
-      try {
-        const response = await fetch('/api/votes');
-        if (response.ok) {
-          const votes = await response.json();
-          
-          // Update all vote buttons with live counts
-          document.querySelectorAll('[data-vote-button]').forEach(button => {
-            const id = button.dataset.id;
-            if (id && votes[id]) {
-              const countEl = button.querySelector('.vote-count');
-              const currentCount = votes[id];
-              button.dataset.count = String(currentCount);
-              if (countEl) countEl.textContent = String(currentCount);
-            }
-          });
-        }
-      } catch (error) {
-        console.error('Failed to load live vote counts:', error);
-      }
-    }
+    <!-- What We're Cultivating -->
+    <section class="mb-12">
+      <h2 class="mb-6 text-3xl font-bold">🪴 What We're Cultivating</h2>
+      <ul class="list-disc space-y-3 pl-6">
+        <li><strong>Open playbooks</strong> that pair human storytelling with AI co-pilots.</li>
+        <li><strong>Curated experiments</strong> to explore campaigns, prompts, and creative tooling.</li>
+        <li><strong>City spotlights</strong>, beginning with <a href="https://la.curations.cc" class="text-lime-600 hover:underline">CurationsLA</a> — a Los Angeles newsletter lovingly crafted by Garrett's mom.</li>
+      </ul>
+    </section>
 
-    // Load data when page is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadLiveData);
-    } else {
-      loadLiveData();
-    }
-  </script>
+    <!-- How to Contribute -->
+    <section class="mb-12">
+      <h2 class="mb-6 text-3xl font-bold">🤝 How to Contribute</h2>
+      <ol class="list-decimal space-y-3 pl-6">
+        <li>Browse the Wiki for briefs or automation ideas ready for iteration.</li>
+        <li>Share your intent in Discussions so collaborators can join you.</li>
+        <li>Prototype in public. Document prompts, assets, and learnings so the next curator can build faster.</li>
+      </ol>
+    </section>
+
+    <!-- Stay in the Loop -->
+    <section class="mb-12">
+      <h2 class="mb-6 text-3xl font-bold">📬 Stay in the Loop</h2>
+      <ul class="list-disc space-y-3 pl-6">
+        <li>Subscribe to the <a href="https://github.com/curationsdev/community/discussions/categories/announcements" class="text-lime-600 hover:underline">CURATIONS.DEV changelog</a> for release notes.</li>
+        <li>Follow <a href="https://curations.org" class="text-lime-600 hover:underline">CURATIONS.ORG</a> for agency-side case studies and stories.</li>
+        <li>Drop your local insights in <a href="https://la.curations.cc" class="text-lime-600 hover:underline">CurationsLA</a> — we're expanding city by city.</li>
+      </ul>
+    </section>
+
+    <!-- Footer Message -->
+    <div class="mt-12 text-center text-lg">
+      <p>Let's co-create marketing that feels as human as it is intelligent. 💚</p>
+    </div>
+  </div>
 </BaseLayout>

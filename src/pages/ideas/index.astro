@@ -74,18 +74,116 @@ import BaseLayout from "@layouts/BaseLayout.astro";
             body: JSON.stringify(payload),
           });
           if (response.ok) {
+            const result = await response.json();
             form.reset();
-            if (status) status.textContent = "Idea submitted!";
-            // Reload ideas after successful submission
-            setTimeout(loadLiveIdeas, 1000);
+            
+            // Show professional success message
+            if (status) {
+              status.innerHTML = `
+                <div class="rounded-xl border-2 border-green-500 bg-green-50 p-4 mt-4">
+                  <div class="flex items-center gap-3">
+                    <div class="rounded-full bg-green-500 p-1">
+                      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-green-800 text-sm">Idea Successfully Submitted!</p>
+                      <p class="text-green-700 text-xs mt-1">Your idea "${result.title}" is now live. It may take 1-2 minutes to appear in the list due to content moderation and caching.</p>
+                    </div>
+                  </div>
+                </div>
+              `;
+              
+              // Clear message after 8 seconds
+              setTimeout(() => {
+                if (status) status.innerHTML = "";
+              }, 8000);
+            }
+            
+            // Add optimistic idea to the list immediately
+            addOptimisticIdea(result);
+            
+            // Reload ideas after delay to get final state
+            setTimeout(loadLiveIdeas, 2000);
           } else {
-            if (status) status.textContent = "Submission failed. Try again.";
+            if (status) {
+              status.innerHTML = `
+                <div class="rounded-xl border-2 border-red-500 bg-red-50 p-4 mt-4">
+                  <p class="text-red-800 text-sm">⚠️ Submission failed. Please check your connection and try again.</p>
+                </div>
+              `;
+            }
           }
         } catch (error) {
           console.error(error);
-          if (status) status.textContent = "Offline? Please retry.";
+          if (status) {
+            status.innerHTML = `
+              <div class="rounded-xl border-2 border-orange-500 bg-orange-50 p-4 mt-4">
+                <p class="text-orange-800 text-sm">🔌 Connection issue. Please check your internet and retry.</p>
+              </div>
+            `;
+          }
         }
       });
+    }
+
+    // Add optimistic idea immediately after submission
+    function addOptimisticIdea(idea) {
+      const container = document.getElementById('ideas-container');
+      if (!container) return;
+      
+      // Create optimistic idea HTML with subtle indicator
+      const optimisticHTML = `
+        <div class="rounded-3xl border-4 border-ink bg-gradient-to-r from-green-50 to-white p-6 shadow-vibe relative" data-optimistic="${idea.id}">
+          <div class="absolute top-2 right-2">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              ✓ Just submitted
+            </span>
+          </div>
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <h3 class="font-display text-xl uppercase tracking-[0.3em] text-ink">${idea.title}</h3>
+              <p class="mt-2 text-sm text-ink/70">${idea.description}</p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                ${idea.categories.map(cat => `
+                  <span class="rounded-full border border-ink px-3 py-1 text-xs uppercase tracking-[0.25em] text-ink">${cat}</span>
+                `).join('')}
+              </div>
+              <p class="mt-2 text-xs text-green-600">⏱️ Processing... May take 1-2 minutes to sync across all users</p>
+            </div>
+            <button 
+              class="group inline-flex items-center gap-2 rounded-full border-4 border-ink bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1"
+              data-id="${idea.id}"
+              data-count="0"
+              data-vote-button
+              type="button"
+            >
+              <span class="vote-arrow rounded-full bg-fuchsia-500 px-2 py-1 text-ink transition-transform">▲</span>
+              <span class="vote-count" aria-live="polite" role="status">0</span>
+              <span class="loading-spinner hidden">⟳</span>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Remove loading state if it exists
+      const loadingState = container.querySelector('.loading-state');
+      if (loadingState) loadingState.remove();
+      
+      // Remove empty state if it exists  
+      const emptyState = container.querySelector('.text-center');
+      if (emptyState && emptyState.textContent.includes('No Ideas Yet')) {
+        emptyState.remove();
+      }
+      
+      // Add to top of list
+      container.insertAdjacentHTML('afterbegin', optimisticHTML);
+      
+      // Re-bind vote buttons
+      if (window.hydrateVoteButtons) {
+        window.hydrateVoteButtons();
+      }
     }
 
     // Load live ideas from API
@@ -104,6 +202,14 @@ import BaseLayout from "@layouts/BaseLayout.astro";
           if (!container) return;
           
           if (liveIdeas.length > 0) {
+            // Remove optimistic items that now exist in live data
+            document.querySelectorAll('[data-optimistic]').forEach(el => {
+              const id = el.getAttribute('data-optimistic');
+              if (liveIdeas.find(idea => idea.id === id)) {
+                el.remove();
+              }
+            });
+            
             // Generate HTML for live ideas
             container.innerHTML = liveIdeas.map(idea => `
               <div class="rounded-3xl border-4 border-ink bg-white p-6 shadow-vibe">

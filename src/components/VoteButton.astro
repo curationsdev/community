@@ -72,12 +72,15 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
           throw new Error(`Vote request failed with status ${response.status}`);
         }
         
-        // Success feedback
+        // Success feedback with professional notification
         const arrow = button.querySelector<HTMLElement>(".vote-arrow");
         if (arrow) {
           arrow.style.backgroundColor = "#10b981"; // green
           setTimeout(() => arrow.style.backgroundColor = "", 1000);
         }
+        
+        // Show elegant success notification
+        showVoteSuccessNotification();
       } catch (error) {
         console.error("Vote error", error);
         updateCount(count);
@@ -102,9 +105,48 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
       .forEach((button) => bindVoteButton(button));
   };
 
+  // Show professional vote success notification
+  const showVoteSuccessNotification = () => {
+    // Remove any existing notifications
+    document.querySelectorAll('.vote-notification').forEach(el => el.remove());
+    
+    // Create elegant notification
+    const notification = document.createElement('div');
+    notification.className = 'vote-notification fixed top-4 right-4 z-50 transform translate-x-full transition-transform duration-300';
+    notification.innerHTML = `
+      <div class="rounded-xl border-2 border-green-500 bg-white shadow-lg p-4 max-w-sm">
+        <div class="flex items-center gap-3">
+          <div class="rounded-full bg-green-500 p-1">
+            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold text-green-800 text-sm">Vote Counted!</p>
+            <p class="text-green-700 text-xs">Changes sync across users within 1-2 minutes</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Slide in
+    setTimeout(() => {
+      notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Slide out and remove
+    setTimeout(() => {
+      notification.style.transform = 'translateX(full)';
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  };
+
   // Make functions available globally for dynamic content
   (window as any).hydrateVoteButtons = hydrateVoteButtons;
   (window as any).bindVoteButton = bindVoteButton;
+  (window as any).showVoteSuccessNotification = showVoteSuccessNotification;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", hydrateVoteButtons, { once: true });

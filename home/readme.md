@@ -11,7 +11,7 @@ Welcome to the home base for the **CURATIONS.DEV** open-source community. This p
 
 | Destination | Why it matters |
 | --- | --- |
-| [curations.dev](https://curations.dev) _(coming soon)_ | The polished launchpad for community members and collaborators. Bookmark it! |
+| [curations.dev](https://curations.dev) | The polished launchpad for community members and collaborators. Bookmark it! |
 | [Community Wiki](https://github.com/curationsdev/community/wiki) | Living documentation with playbooks, briefs, and automations you can remix. |
 | [Discussions](https://github.com/curationsdev/community/discussions) | Meet the crew, pitch ideas, and log creative experiments in public. |
 

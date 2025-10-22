@@ -1,6 +1,8 @@
 # CURATIONS Community Hub
 
-Astro-powered portal for [curations.dev](https://curations.dev) bringing together Human × AI projects, ideas, and conversations. The repo bundles the marketing site, open source showcase, idea submission flow, and forum prototype into one deployable package targeting Cloudflare Pages + Workers.
+🚀 **Live at: [curations.dev](https://curations.dev)**
+
+Astro-powered community portal bringing together Human × AI projects, ideas, and conversations. This repository powers the complete curations.dev experience with real-time voting, idea submissions, and community forums.
 
 ## Tech Stack
 
@@ -17,7 +19,7 @@ npm install
 npm run dev
 ```
 
-> 🚀 **Live at:** [curations.dev](https://curations.dev) | **Community:** [community.curations.dev](https://community.curations.dev)
+> 🌐 **Production**: [curations.dev](https://curations.dev) | **API**: curations.dev/api/*
 
 > The project scaffolding uses public npm packages. If you do not have network access inside your environment you can still inspect and modify the source, but the dev server will require installing dependencies locally.
 
@@ -45,11 +47,15 @@ The Astro app reads public endpoints exposed by the Worker. When deploying to Cl
 - `PUBLIC_IDEA_ENDPOINT` – URL for new idea submissions (defaults to `/api/idea`)
 - `PUBLIC_FORUM_ENDPOINT` – URL for the Durable Object forum handler (defaults to `/api/forum`)
 
-## Cloudflare Deployment
+## Architecture & Deployment
 
-The community hub deploys as a hybrid application:
-- **Astro static site** → Cloudflare Pages
-- **API Worker + Durable Objects** → Cloudflare Workers
+**Live Infrastructure:**
+- **Static Site**: Cloudflare Pages (`curations.dev`)
+- **API Layer**: Cloudflare Workers (`curations.dev/api/*`)
+- **Storage**: KV Namespaces for votes and ideas
+- **Domain**: Single domain setup for simplicity
+
+**Current Status:** ✅ Fully deployed and operational
 
 ### Quick Start
 
@@ -83,4 +89,25 @@ For detailed deployment instructions, see [`docs/cloudflare-deployment.md`](docs
 - Expand the prompt gallery and add leaderboard metrics.
 - Add announcement banner to highlight launches.
 
-Contributions, issues, and vibe checks welcome in the [Discussions](https://github.com/curationsdev/community/discussions) tab once we go live!
+## 🔄 **Live API Endpoints**
+
+- **POST** `/api/vote` - Cast a vote for a project
+- **GET** `/api/votes` - Fetch all current vote counts  
+- **POST** `/api/idea` - Submit a new community idea
+- **GET** `/api/ideas` - Fetch all submitted ideas
+- **GET** `/api/vote/{id}` - Debug: Check specific vote count
+
+## 🤖 **For Git Agents & Contributors**
+
+**Domain Configuration:**
+- ✅ **Production**: `curations.dev` (single domain setup)
+- ✅ **API**: `curations.dev/api/*` 
+- ❌ **Removed**: `community.curations.dev` (simplified to single domain)
+
+**Deployment Status:**
+- ✅ **Cloudflare Pages**: Auto-deploys from `main` branch
+- ✅ **Cloudflare Workers**: API endpoints with KV storage
+- ✅ **Real-time Features**: Live voting, idea submissions
+- ✅ **DNS**: Single domain configuration active
+
+Contributions, issues, and vibe checks welcome in the [Discussions](https://github.com/curationsdev/community/discussions) tab!

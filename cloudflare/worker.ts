@@ -40,13 +40,32 @@ export default {
 
     // Handle vote GET (fetch current counts)
     if (url.pathname === "/api/votes" && request.method === "GET") {
-      const list = await env.CURATIONS_VOTES.list();
-      const votes: Record<string, number> = {};
-      for (const key of list.keys) {
-        const count = await env.CURATIONS_VOTES.get(key.name);
-        votes[key.name] = Number(count ?? "0");
+      try {
+        const list = await env.CURATIONS_VOTES.list();
+        const votes: Record<string, number> = {};
+        
+        // Process all keys from the list
+        await Promise.all(
+          list.keys.map(async (key) => {
+            const count = await env.CURATIONS_VOTES.get(key.name);
+            if (count !== null) {
+              votes[key.name] = Number(count);
+            }
+          })
+        );
+        
+        return Response.json(votes);
+      } catch (error) {
+        console.error('Error fetching votes:', error);
+        return Response.json({ error: 'Failed to fetch votes' }, { status: 500 });
       }
-      return Response.json(votes);
+    }
+
+    // Handle debug endpoint (check specific vote)
+    if (url.pathname.startsWith("/api/vote/") && request.method === "GET") {
+      const id = url.pathname.split("/api/vote/")[1];
+      const count = await env.CURATIONS_VOTES.get(id);
+      return Response.json({ id, count: count ? Number(count) : 0, exists: count !== null });
     }
 
     // Handle idea POST (create new)

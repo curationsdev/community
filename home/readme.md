@@ -1,7 +1,7 @@
 # 🌿 CURATIONS.DEV Community Home
 
 <div align="center">
-  <img src="https://curations.org/favicon.svg" alt="CURATIONS" width="96" height="96" />
+  <img src="https://curations.org/favicon.svg" alt="CURATIONS logo" width="96" height="96" />
   <p><strong>Human × AI creative collaboration for people who curate with heart.</strong></p>
 </div>
 

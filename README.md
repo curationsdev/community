@@ -43,25 +43,31 @@ The Astro app reads public endpoints exposed by the Worker. When deploying to Cl
 - `PUBLIC_IDEA_ENDPOINT` – URL for new idea submissions (defaults to `/api/idea`)
 - `PUBLIC_FORUM_ENDPOINT` – URL for the Durable Object forum handler (defaults to `/api/forum`)
 
-## Cloudflare Worker Deployment
+## Cloudflare Deployment
 
-The Worker (see `cloudflare/worker.ts`) handles vote counts, idea storage, and proxies forum traffic to the Durable Object class. To deploy:
+The community hub deploys as a hybrid application:
+- **Astro static site** → Cloudflare Pages
+- **API Worker + Durable Objects** → Cloudflare Workers
 
-1. Create KV namespaces for `CURATIONS_VOTES` and `CURATIONS_IDEAS`.
-2. Bind a Durable Object named `CURATIONS_FORUM` to the `ForumDurableObject` class.
-3. Update the generated namespace IDs inside `wrangler.toml`.
-4. Publish the worker:
+### Quick Start
 
-```bash
-npx wrangler deploy
-```
+For detailed deployment instructions, see [`docs/cloudflare-deployment.md`](docs/cloudflare-deployment.md).
 
-## Cloudflare Pages Integration
+**Automated deployment via GitHub Actions:**
+1. Set up GitHub secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
+2. Push to `main` branch - workflows deploy automatically
 
-1. Connect the GitHub repository to Cloudflare Pages.
-2. Set the build command to `npm run build` and the output directory to `dist`.
-3. Add environment variables listed above. If deploying preview builds, repeat them for preview environments.
-4. Bind the Worker using the [Cloudflare Pages Functions integration](https://developers.cloudflare.com/pages/functions/bindings/).
+**Manual deployment:**
+1. Run `./scripts/setup-cloudflare.sh` to create KV namespaces
+2. Update namespace IDs in `wrangler.toml`
+3. Deploy Worker: `npx wrangler deploy`
+4. Connect repo to Cloudflare Pages via dashboard
+
+## Documentation
+
+- **[Quick Start Guide](docs/QUICKSTART.md)** - Fast-track deployment to Cloudflare
+- **[Deployment Guide](docs/cloudflare-deployment.md)** - Comprehensive Cloudflare setup
+- **[GitHub Integrations](docs/github-integrations.md)** - Available automation tools and connectors
 
 ## Automation, Agents & Connectors
 

@@ -18,7 +18,6 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
   const bindVoteButton = (button: HTMLButtonElement) => {
     if (button.dataset.voteBound === "true") return;
     button.dataset.voteBound = "true";
-
     button.addEventListener("click", async () => {
       if (button.disabled) return;
 

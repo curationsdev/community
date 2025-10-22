@@ -2,6 +2,11 @@ name = "curations-community"
 main = "cloudflare/worker.ts"
 compatibility_date = "2024-05-11"
 
+# Development environment configuration
+# Note: KV namespace IDs will be created during deployment
+# Run: npx wrangler kv:namespace create CURATIONS_VOTES
+# Run: npx wrangler kv:namespace create CURATIONS_IDEAS
+
 [vars]
 PUBLIC_VOTE_ENDPOINT = "/api/vote"
 PUBLIC_IDEA_ENDPOINT = "/api/idea"
@@ -9,12 +14,41 @@ PUBLIC_FORUM_ENDPOINT = "/api/forum"
 
 [[kv_namespaces]]
 binding = "CURATIONS_VOTES"
-id = "<to-be-created>"
+id = "85931fcebb044408881042bec2cb33de"
 
 [[kv_namespaces]]
 binding = "CURATIONS_IDEAS"
-id = "<to-be-created>"
+id = "b81adffa386f42819603a1246902a648"
 
-[[durable_objects.bindings]]
-name = "CURATIONS_FORUM"
-class_name = "ForumDurableObject"
+# Durable Objects disabled for initial deployment
+# TODO: Enable when on paid plan or using SQLite classes
+# [[durable_objects.bindings]]
+# name = "CURATIONS_FORUM"
+# class_name = "ForumDurableObject"
+
+# Enable Durable Objects migration (disabled for now)
+# [[migrations]]
+# tag = "v1"
+# new_classes = ["ForumDurableObject"]
+
+# Development environment overrides
+[env.dev]
+name = "curations-community-dev"
+
+[env.dev.vars]
+PUBLIC_VOTE_ENDPOINT = "/api/vote"
+PUBLIC_IDEA_ENDPOINT = "/api/idea"
+PUBLIC_FORUM_ENDPOINT = "/api/forum"
+
+[[env.dev.kv_namespaces]]
+binding = "CURATIONS_VOTES"
+id = "01c344efb6154315b6e8ebfb913423e1"
+
+[[env.dev.kv_namespaces]]
+binding = "CURATIONS_IDEAS"
+id = "dff55e4ba70a4b0d922d36f9ab989484"
+
+# Durable Objects disabled for development environment too
+# [[env.dev.durable_objects.bindings]]
+# name = "CURATIONS_FORUM"
+# class_name = "ForumDurableObject"

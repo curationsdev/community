@@ -1,12 +1,12 @@
 ---
+import type { GetStaticPaths } from "astro";
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getChannelBySlug, channels } from "@data/forum";
+import { channels, getChannelBySlug } from "@data/forum";
 
-export function getStaticPaths() {
-  return channels.map((channel) => ({
+export const getStaticPaths: GetStaticPaths = () =>
+  channels.map((channel) => ({
     params: { slug: channel.slug },
   }));
-}
 
 const { slug } = Astro.params;
 const channel = slug ? getChannelBySlug(slug) : undefined;

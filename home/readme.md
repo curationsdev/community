@@ -1,4 +1,4 @@
-# 🌿 CURATIONS.DEV Community Home
+# 🌿 CURATIONS.DEV Community Home // UPDATING - WEDNESDAY 22ND OCTOBER 2025
 
 <div align="center">
   <img src="https://curations.org/favicon.svg" alt="CURATIONS logo" width="96" height="96" />

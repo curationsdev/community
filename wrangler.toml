@@ -12,6 +12,11 @@ PUBLIC_VOTE_ENDPOINT = "/api/vote"
 PUBLIC_IDEA_ENDPOINT = "/api/idea"
 PUBLIC_FORUM_ENDPOINT = "/api/forum"
 
+# Routes for curations.dev domain
+routes = [
+  { pattern = "curations.dev/api/*", zone_name = "curations.dev" }
+]
+
 [[kv_namespaces]]
 binding = "CURATIONS_VOTES"
 id = "85931fcebb044408881042bec2cb33de"

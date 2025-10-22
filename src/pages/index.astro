@@ -1,20 +1,31 @@
 ---
+/**
+ * Landing Page Content
+ * 
+ * To edit this landing page content, update the README.md file in the repository root.
+ * The content here should mirror README.md for easy editing by non-technical users.
+ * When updating, keep both files in sync.
+ */
 import BaseLayout from "@layouts/BaseLayout.astro";
 ---
 <BaseLayout
   title="CURATIONS.DEV Community Home"
   description="Human × AI creative collaboration for people who curate with heart."
+  showHeader={false}
+  showFooter={false}
 >
   <div class="mx-auto max-w-4xl px-6 py-16">
     <!-- Header -->
     <div class="mb-12 text-center">
-      <img src="https://curations.org/favicon.svg" alt="CURATIONS logo" class="mx-auto mb-6 h-24 w-24" />
+      <a href="https://curations.dev" class="inline-block mb-6">
+        <h1 class="font-display text-5xl font-bold uppercase tracking-wider text-ink hover:text-ink/80 transition-colors">CURATIONS.DEV</h1>
+      </a>
       <p class="text-xl font-semibold">Human × AI creative collaboration for people who curate with heart.</p>
     </div>
 
     <!-- Welcome -->
     <div class="prose prose-lg mb-12 max-w-none">
-      <p>Welcome to the home base for the <strong>CURATIONS.DEV</strong> open-source community. This page mirrors the warmth and clarity we bring to every campaign at <a href="https://curations.org" class="text-lime-600 hover:underline">CURATIONS.ORG — "We curate the heart of brands."</a> Discover how we blend human insight with AI intuition, then dive into the spaces where the work truly happens.</p>
+      <p>Welcome to the home base for the <strong>CURATIONS.DEV</strong> open-source community. This page mirrors the warmth and clarity we bring to every campaign at <a href="https://curations.org" class="text-cf-orange hover:underline">CURATIONS.ORG — "We curate the heart of brands."</a> Discover how we blend human insight with AI intuition, then dive into the spaces where the work truly happens.</p>
     </div>
 
     <!-- Start Here Section -->
@@ -30,15 +41,15 @@ import BaseLayout from "@layouts/BaseLayout.astro";
           </thead>
           <tbody class="bg-sand">
             <tr class="border-t-2 border-ink">
-              <td class="px-6 py-4"><a href="https://curations.dev" class="font-semibold text-lime-600 hover:underline">curations.dev</a></td>
+              <td class="px-6 py-4"><a href="https://curations.dev" class="font-semibold text-cf-orange hover:underline">curations.dev</a></td>
               <td class="px-6 py-4">The polished launchpad for community members and collaborators. Bookmark it!</td>
             </tr>
             <tr class="border-t-2 border-ink">
-              <td class="px-6 py-4"><a href="https://github.com/curationsdev/community/wiki" class="font-semibold text-lime-600 hover:underline">Community Wiki</a></td>
+              <td class="px-6 py-4"><a href="https://github.com/curationsdev/community/wiki" class="font-semibold text-cf-orange hover:underline">Community Wiki</a></td>
               <td class="px-6 py-4">Living documentation with playbooks, briefs, and automations you can remix.</td>
             </tr>
             <tr class="border-t-2 border-ink">
-              <td class="px-6 py-4"><a href="https://github.com/curationsdev/community/discussions" class="font-semibold text-lime-600 hover:underline">Discussions</a></td>
+              <td class="px-6 py-4"><a href="https://github.com/curationsdev/community/discussions" class="font-semibold text-cf-orange hover:underline">Discussions</a></td>
               <td class="px-6 py-4">Meet the crew, pitch ideas, and log creative experiments in public.</td>
             </tr>
           </tbody>
@@ -55,7 +66,7 @@ import BaseLayout from "@layouts/BaseLayout.astro";
       <ul class="list-disc space-y-3 pl-6">
         <li><strong>Open playbooks</strong> that pair human storytelling with AI co-pilots.</li>
         <li><strong>Curated experiments</strong> to explore campaigns, prompts, and creative tooling.</li>
-        <li><strong>City spotlights</strong>, beginning with <a href="https://la.curations.cc" class="text-lime-600 hover:underline">CurationsLA</a> — a Los Angeles newsletter lovingly crafted by Garrett's mom.</li>
+        <li><strong>City spotlights</strong>, beginning with <a href="https://la.curations.cc" class="text-cf-orange hover:underline">CurationsLA</a> — a Los Angeles newsletter lovingly crafted by Garrett's mom.</li>
       </ul>
     </section>
 
@@ -73,9 +84,9 @@ import BaseLayout from "@layouts/BaseLayout.astro";
     <section class="mb-12">
       <h2 class="mb-6 text-3xl font-bold">📬 Stay in the Loop</h2>
       <ul class="list-disc space-y-3 pl-6">
-        <li>Subscribe to the <a href="https://github.com/curationsdev/community/discussions/categories/announcements" class="text-lime-600 hover:underline">CURATIONS.DEV changelog</a> for release notes.</li>
-        <li>Follow <a href="https://curations.org" class="text-lime-600 hover:underline">CURATIONS.ORG</a> for agency-side case studies and stories.</li>
-        <li>Drop your local insights in <a href="https://la.curations.cc" class="text-lime-600 hover:underline">CurationsLA</a> — we're expanding city by city.</li>
+        <li>Subscribe to the <a href="https://github.com/curationsdev/community/discussions/categories/announcements" class="text-cf-orange hover:underline">CURATIONS.DEV changelog</a> for release notes.</li>
+        <li>Follow <a href="https://curations.org" class="text-cf-orange hover:underline">CURATIONS.ORG</a> for agency-side case studies and stories.</li>
+        <li>Drop your local insights in <a href="https://la.curations.cc" class="text-cf-orange hover:underline">CurationsLA</a> — we're expanding city by city.</li>
       </ul>
     </section>
 

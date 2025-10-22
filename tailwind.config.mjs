@@ -16,6 +16,7 @@ export default {
           500: "#FF3EC8",
           600: "#E020A8",
         },
+        "cf-orange": "#f6821f", // Cloudflare brand orange
         ink: "#0f0f0f",
         sand: "#f9f4ef",
       },

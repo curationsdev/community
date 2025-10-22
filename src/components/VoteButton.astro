@@ -13,8 +13,8 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
   <span class="vote-count" aria-live="polite" role="status">{initialCount}</span>
   <span class="loading-spinner hidden">⟳</span>
 </button>
-<script lang="ts">
-  const endpoint = {JSON.stringify(endpoint)};
+<script define:vars={{ endpoint }}>
+  // endpoint is now available in the script scope
 
   const bindVoteButton = (button: HTMLButtonElement) => {
     if (button.dataset.voteBound === "true") return;

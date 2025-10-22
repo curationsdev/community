@@ -1,115 +1,38 @@
-# CURATIONS Community Hub
+# 🌿 CURATIONS.DEV Community Home
 
-🚀 **Live at: [curations.dev](https://curations.dev)**
+<div align="center">
+  <img src="https://curations.org/favicon.svg" alt="CURATIONS logo" width="96" height="96" />
+  <p><strong>Human × AI creative collaboration for people who curate with heart.</strong></p>
+</div>
 
-Astro-powered community portal bringing together Human × AI projects, ideas, and conversations. This repository powers the complete curations.dev experience with real-time voting, idea submissions, and community forums.
+Welcome to the home base for the **CURATIONS.DEV** open-source community. This page mirrors the warmth and clarity we bring to every campaign at [CURATIONS.ORG — "We curate the heart of brands."](https://curations.org) Discover how we blend human insight with AI intuition, then dive into the spaces where the work truly happens.
 
-## Tech Stack
+## ✨ Start Here
 
-- **Astro 4** + Tailwind for the front-end experience
-- **Cloudflare Pages** for static hosting
-- **Cloudflare Workers & KV** for upvotes and idea submissions
-- **Cloudflare Durable Objects** for the forum message layer
-- **Biome** + Prettier for linting and formatting
+| Destination                                                          | Why it matters                                                               |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [curations.dev](https://curations.dev)                               | The polished launchpad for community members and collaborators. Bookmark it! |
+| [Community Wiki](https://github.com/curationsdev/community/wiki)     | Living documentation with playbooks, briefs, and automations you can remix.  |
+| [Discussions](https://github.com/curationsdev/community/discussions) | Meet the crew, pitch ideas, and log creative experiments in public.          |
 
-## Getting Started
+> **Tip:** New to the collective? Introduce yourself in Discussions and pick a starter brief from the Wiki.
 
-```bash
-npm install
-npm run dev
-```
+## 🪴 What We're Cultivating
 
-> 🌐 **Production**: [curations.dev](https://curations.dev) | **API**: curations.dev/api/*
+- **Open playbooks** that pair human storytelling with AI co-pilots.
+- **Curated experiments** to explore campaigns, prompts, and creative tooling.
+- **City spotlights**, beginning with [CurationsLA](https://la.curations.cc) — a Los Angeles newsletter lovingly crafted by Garrett's mom.
 
-> The project scaffolding uses public npm packages. If you do not have network access inside your environment you can still inspect and modify the source, but the dev server will require installing dependencies locally.
+## 🤝 How to Contribute
 
-## Project Structure
+1. Browse the Wiki for briefs or automation ideas ready for iteration.
+2. Share your intent in Discussions so collaborators can join you.
+3. Prototype in public. Document prompts, assets, and learnings so the next curator can build faster.
 
-```
-├── src
-│   ├── components      # Shared UI primitives (cards, hero, vote button)
-│   ├── data            # Mock data for projects, ideas, and forum channels
-│   ├── layouts         # Base layout with header/footer + SEO metadata
-│   ├── pages           # Astro route files for homepage, projects, ideas, forum
-│   ├── styles          # Global CSS + Tailwind utilities
-│   └── utils           # Helper utilities (reserved for future expansion)
-├── public              # Static assets (SVG OG image, favicon, robots)
-├── cloudflare          # Worker + Durable Object implementation
-├── wrangler.toml       # Cloudflare deployment configuration
-└── README.md
-```
+## 📬 Stay in the Loop
 
-## Environment Variables
+- Subscribe to the [CURATIONS.DEV changelog](https://github.com/curationsdev/community/discussions/categories/announcements) for release notes.
+- Follow [CURATIONS.ORG](https://curations.org) for agency-side case studies and stories.
+- Drop your local insights in [CurationsLA](https://la.curations.cc) — we're expanding city by city.
 
-The Astro app reads public endpoints exposed by the Worker. When deploying to Cloudflare Pages, configure the following environment variables:
-
-- `PUBLIC_VOTE_ENDPOINT` – URL of the vote endpoint (defaults to `/api/vote`)
-- `PUBLIC_IDEA_ENDPOINT` – URL for new idea submissions (defaults to `/api/idea`)
-- `PUBLIC_FORUM_ENDPOINT` – URL for the Durable Object forum handler (defaults to `/api/forum`)
-
-## Architecture & Deployment
-
-**Live Infrastructure:**
-- **Static Site**: Cloudflare Pages (`curations.dev`)
-- **API Layer**: Cloudflare Pages Functions (`curations.dev/api/*`)
-- **Storage**: KV Namespaces for votes and ideas
-- **Domain**: Single domain setup for simplicity
-
-**Current Status:** ✅ Fully deployed and operational
-
-**Recent Fix (2025-10-22):** API integration issue resolved. API endpoints now use Cloudflare Pages Functions instead of separate Worker. See [`docs/API_INTEGRATION_FIX.md`](docs/API_INTEGRATION_FIX.md) for details.
-
-### Quick Start
-
-For detailed deployment instructions, see [`docs/cloudflare-deployment.md`](docs/cloudflare-deployment.md).
-
-**Automated deployment via GitHub Actions:**
-1. Set up GitHub secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
-2. Push to `main` branch - workflows deploy automatically
-
-**Manual deployment:**
-1. Run `./scripts/setup-cloudflare.sh` to create KV namespaces
-2. Update namespace IDs in `wrangler.toml`
-3. Deploy Worker: `npx wrangler deploy`
-4. Connect repo to Cloudflare Pages via dashboard
-
-## Documentation
-
-- **[Quick Start Guide](docs/QUICKSTART.md)** - Fast-track deployment to Cloudflare
-- **[Deployment Guide](docs/cloudflare-deployment.md)** - Comprehensive Cloudflare setup
-- **[GitHub Integrations](docs/github-integrations.md)** - Available automation tools and connectors
-
-## Automation, Agents & Connectors
-
-- Browse the catalog in [`docs/github-integrations.md`](docs/github-integrations.md) for GitHub Apps, AI models, and workflow connectors ready to enable.
-- Document any new automation touchpoints you introduce so the community can toggle them on without spelunking for secrets.
-
-## Roadmap & Stretch Goals
-
-- Hook the front-end vote + submission components to live Worker endpoints.
-- Implement OAuth providers (GitHub/Google) for forum identity, with anonymous fallback.
-- Expand the prompt gallery and add leaderboard metrics.
-- Add announcement banner to highlight launches.
-
-## 🔄 **Live API Endpoints**
-
-- **POST** `/api/vote` - Cast a vote for a project
-- **GET** `/api/votes` - Fetch all current vote counts  
-- **POST** `/api/idea` - Submit a new community idea
-- **GET** `/api/ideas` - Fetch all submitted ideas
-- **GET** `/api/vote/{id}` - Debug: Check specific vote count
-
-## 🤖 **For Git Agents & Contributors**
-
-**Domain Configuration:**
-- ✅ **Production**: `curations.dev` (single domain setup)
-- ✅ **API**: `curations.dev/api/*` 
-- ❌ **Removed**: `community.curations.dev` (simplified to single domain)
-
-**Deployment Status:**
-- ✅ **Cloudflare Pages**: Auto-deploys from `main` branch
-- ✅ **Cloudflare Workers**: API endpoints with KV storage
-- ✅ **Real-time Features**: Live voting, idea submissions
-- ✅ **DNS**: Single domain configuration active
-
-Contributions, issues, and vibe checks welcome in the [Discussions](https://github.com/curationsdev/community/discussions) tab!
+Let's co-create marketing that feels as human as it is intelligent. 💚

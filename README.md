@@ -9,7 +9,7 @@
   <p><strong>Human × AI creative collaboration for people who curate with heart.</strong></p>
 </div>
 
-Welcome to the home base for the **CURATIONS.DEV** open-source community. This page mirrors the warmth and clarity we bring to every campaign at [CURATIONS.ORG — "We curate the heart of brands."](https://curations.org) Discover how we blend human insight with AI intuition, then dive into the spaces where the work truly happens.
+**Updating: Wednesday 22nd October 2025** Welcome to the home base for the **CURATIONS.DEV** open-source community. This page mirrors the warmth and clarity we bring to every campaign at [CURATIONS.ORG — "We curate the heart of brands."](https://curations.org) Discover how we blend human insight with AI intuition, then dive into the spaces where the work truly happens.
 
 ## ✨ Start Here
 

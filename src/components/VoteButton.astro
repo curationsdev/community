@@ -66,6 +66,10 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
       .forEach((button) => bindVoteButton(button));
   };
 
+  // Make functions available globally for dynamic content
+  (window as any).hydrateVoteButtons = hydrateVoteButtons;
+  (window as any).bindVoteButton = bindVoteButton;
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", hydrateVoteButtons, { once: true });
   } else {

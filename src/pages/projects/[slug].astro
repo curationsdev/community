@@ -53,4 +53,37 @@ if (!project) {
       ) : null}
     </div>
   </section>
+
+  <script>
+    // Load live vote counts for this project
+    async function loadProjectVotes() {
+      try {
+        const response = await fetch('/api/votes');
+        if (response.ok) {
+          const votes = await response.json();
+          
+          // Update vote button with live count
+          const voteButton = document.querySelector('[data-vote-button]');
+          if (voteButton) {
+            const id = voteButton.dataset.id;
+            if (id && votes[id] !== undefined) {
+              const countEl = voteButton.querySelector('.vote-count');
+              const currentCount = votes[id];
+              voteButton.dataset.count = String(currentCount);
+              if (countEl) countEl.textContent = String(currentCount);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load project vote count:', error);
+      }
+    }
+
+    // Load data when page is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadProjectVotes);
+    } else {
+      loadProjectVotes();
+    }
+  </script>
 </BaseLayout>

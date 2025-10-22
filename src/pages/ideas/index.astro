@@ -18,7 +18,8 @@ import { ideas } from "@data/ideas";
   </section>
 
   <section class="mx-auto max-w-5xl px-6 py-12">
-    <div class="grid gap-8">
+    <div id="ideas-container" class="grid gap-8">
+      <!-- Static ideas as fallback -->
       {ideas.map((idea) => (
         <IdeaCard idea={idea} />
       ))}
@@ -77,6 +78,8 @@ import { ideas } from "@data/ideas";
           if (response.ok) {
             form.reset();
             if (status) status.textContent = "Idea submitted!";
+            // Reload ideas after successful submission
+            setTimeout(loadLiveIdeas, 1000);
           } else {
             if (status) status.textContent = "Submission failed. Try again.";
           }
@@ -85,6 +88,67 @@ import { ideas } from "@data/ideas";
           if (status) status.textContent = "Offline? Please retry.";
         }
       });
+    }
+
+    // Load live ideas from API
+    async function loadLiveIdeas() {
+      try {
+        const [ideasResponse, votesResponse] = await Promise.all([
+          fetch('/api/ideas'),
+          fetch('/api/votes')
+        ]);
+
+        if (ideasResponse.ok && votesResponse.ok) {
+          const liveIdeas = await ideasResponse.json();
+          const votes = await votesResponse.json();
+          
+          if (liveIdeas.length > 0) {
+            const container = document.getElementById('ideas-container');
+            if (container) {
+              // Generate HTML for live ideas
+              container.innerHTML = liveIdeas.map(idea => `
+                <div class="rounded-3xl border-4 border-ink bg-white p-6 shadow-vibe">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1">
+                      <h3 class="font-display text-xl uppercase tracking-[0.3em] text-ink">${idea.title}</h3>
+                      <p class="mt-2 text-sm text-ink/70">${idea.description}</p>
+                      <div class="mt-4 flex flex-wrap gap-2">
+                        ${idea.categories.map(cat => `
+                          <span class="rounded-full border border-ink px-3 py-1 text-xs uppercase tracking-[0.25em] text-ink">${cat}</span>
+                        `).join('')}
+                      </div>
+                    </div>
+                    <button 
+                      class="group inline-flex items-center gap-2 rounded-full border-4 border-ink bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1"
+                      data-id="${idea.id}"
+                      data-count="${votes[idea.id] || 0}"
+                      data-vote-button
+                      type="button"
+                    >
+                      <span class="rounded-full bg-fuchsia-500 px-2 py-1 text-ink">▲</span>
+                      <span class="vote-count" aria-live="polite" role="status">${votes[idea.id] || 0}</span>
+                    </button>
+                  </div>
+                </div>
+              `).join('');
+
+              // Re-bind vote buttons for new content
+              if (window.hydrateVoteButtons) {
+                window.hydrateVoteButtons();
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load live ideas:', error);
+      }
+    }
+
+    // Load live data on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadLiveIdeas);
+    } else {
+      loadLiveIdeas();
     }
   </script>
 </BaseLayout>

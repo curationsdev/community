@@ -17,6 +17,8 @@ npm install
 npm run dev
 ```
 
+> 🚀 **Live at:** [curations.dev](https://curations.dev) | **Community:** [community.curations.dev](https://community.curations.dev)
+
 > The project scaffolding uses public npm packages. If you do not have network access inside your environment you can still inspect and modify the source, but the dev server will require installing dependencies locally.
 
 ## Project Structure

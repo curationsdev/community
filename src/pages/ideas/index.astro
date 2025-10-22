@@ -1,7 +1,5 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import IdeaCard from "@components/IdeaCard.astro";
-import { ideas } from "@data/ideas";
 ---
 <BaseLayout
   title="CURATIONS Ideas"
@@ -19,10 +17,10 @@ import { ideas } from "@data/ideas";
 
   <section class="mx-auto max-w-5xl px-6 py-12">
     <div id="ideas-container" class="grid gap-8">
-      <!-- Static ideas as fallback -->
-      {ideas.map((idea) => (
-        <IdeaCard idea={idea} />
-      ))}
+      <div class="loading-state text-center py-8">
+        <p class="text-ink/60">Loading ideas...</p>
+      </div>
+      <!-- Dynamic ideas will be loaded here -->
     </div>
   </section>
 
@@ -102,41 +100,57 @@ import { ideas } from "@data/ideas";
           const liveIdeas = await ideasResponse.json();
           const votes = await votesResponse.json();
           
+          const container = document.getElementById('ideas-container');
+          if (!container) return;
+          
           if (liveIdeas.length > 0) {
-            const container = document.getElementById('ideas-container');
-            if (container) {
-              // Generate HTML for live ideas
-              container.innerHTML = liveIdeas.map(idea => `
-                <div class="rounded-3xl border-4 border-ink bg-white p-6 shadow-vibe">
-                  <div class="flex items-start justify-between gap-4">
-                    <div class="flex-1">
-                      <h3 class="font-display text-xl uppercase tracking-[0.3em] text-ink">${idea.title}</h3>
-                      <p class="mt-2 text-sm text-ink/70">${idea.description}</p>
-                      <div class="mt-4 flex flex-wrap gap-2">
-                        ${idea.categories.map(cat => `
-                          <span class="rounded-full border border-ink px-3 py-1 text-xs uppercase tracking-[0.25em] text-ink">${cat}</span>
-                        `).join('')}
-                      </div>
+            // Generate HTML for live ideas
+            container.innerHTML = liveIdeas.map(idea => `
+              <div class="rounded-3xl border-4 border-ink bg-white p-6 shadow-vibe">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex-1">
+                    <h3 class="font-display text-xl uppercase tracking-[0.3em] text-ink">${idea.title}</h3>
+                    <p class="mt-2 text-sm text-ink/70">${idea.description}</p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                      ${idea.categories.map(cat => `
+                        <span class="rounded-full border border-ink px-3 py-1 text-xs uppercase tracking-[0.25em] text-ink">${cat}</span>
+                      `).join('')}
                     </div>
-                    <button 
-                      class="group inline-flex items-center gap-2 rounded-full border-4 border-ink bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1"
-                      data-id="${idea.id}"
-                      data-count="${votes[idea.id] || 0}"
-                      data-vote-button
-                      type="button"
-                    >
-                      <span class="rounded-full bg-fuchsia-500 px-2 py-1 text-ink">▲</span>
-                      <span class="vote-count" aria-live="polite" role="status">${votes[idea.id] || 0}</span>
-                    </button>
+                    <p class="mt-2 text-xs text-ink/50">Submitted: ${new Date(idea.createdAt).toLocaleDateString()}</p>
                   </div>
+                  <button 
+                    class="group inline-flex items-center gap-2 rounded-full border-4 border-ink bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1"
+                    data-id="${idea.id}"
+                    data-count="${votes[idea.id] || 0}"
+                    data-vote-button
+                    type="button"
+                  >
+                    <span class="vote-arrow rounded-full bg-fuchsia-500 px-2 py-1 text-ink transition-transform">▲</span>
+                    <span class="vote-count" aria-live="polite" role="status">${votes[idea.id] || 0}</span>
+                    <span class="loading-spinner hidden">⟳</span>
+                  </button>
                 </div>
-              `).join('');
+              </div>
+            `).join('');
 
-              // Re-bind vote buttons for new content
-              if (window.hydrateVoteButtons) {
-                window.hydrateVoteButtons();
-              }
+            // Re-bind vote buttons for new content
+            if (window.hydrateVoteButtons) {
+              window.hydrateVoteButtons();
             }
+          } else {
+            // Show empty state
+            container.innerHTML = `
+              <div class="text-center py-12">
+                <div class="rounded-3xl border-4 border-dashed border-ink bg-white p-8">
+                  <h3 class="font-display text-xl uppercase tracking-[0.3em] text-ink">No Ideas Yet</h3>
+                  <p class="mt-2 text-sm text-ink/70">Be the first to submit an idea below!</p>
+                  <button onclick="document.getElementById('submit').scrollIntoView({behavior: 'smooth'})" 
+                          class="mt-4 rounded-full border-4 border-ink bg-lime-500 px-6 py-3 text-xs font-bold uppercase tracking-[0.3em] text-ink">
+                    Submit First Idea
+                  </button>
+                </div>
+              </div>
+            `;
           }
         }
       } catch (error) {

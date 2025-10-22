@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { projects } from "@data/projects";
 
-const base = "https://community.curations.dev";
+const base = "https://curations.dev";
 
 const urls = [
   base,

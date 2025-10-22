@@ -190,6 +190,12 @@ After deployment, verify the following:
 - Verify API token has correct permissions
 - Check Wrangler version: `npx wrangler --version` (should be 3.x)
 
+### TypeScript can't find Cloudflare worker types
+
+- The repository now includes minimal runtime definitions in `cloudflare/types.d.ts`.
+- Ensure your editor picks up the project `tsconfig.json`; it references the local types so no registry download is required.
+- If you previously installed `@cloudflare/workers-types`, remove it before running `npm ci` to avoid mismatched lockfile errors.
+
 ### Pages build fails
 
 - Check build logs in Cloudflare Dashboard

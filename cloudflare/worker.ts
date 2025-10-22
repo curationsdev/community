@@ -25,6 +25,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
+    // Handle vote POST (increment)
     if (url.pathname === "/api/vote" && request.method === "POST") {
       const payload = (await request.json()) as VotePayload;
       if (!payload.id) {
@@ -37,6 +38,18 @@ export default {
       return Response.json({ id: key, votes: total });
     }
 
+    // Handle vote GET (fetch current counts)
+    if (url.pathname === "/api/votes" && request.method === "GET") {
+      const list = await env.CURATIONS_VOTES.list();
+      const votes: Record<string, number> = {};
+      for (const key of list.keys) {
+        const count = await env.CURATIONS_VOTES.get(key.name);
+        votes[key.name] = Number(count ?? "0");
+      }
+      return Response.json(votes);
+    }
+
+    // Handle idea POST (create new)
     if (url.pathname === "/api/idea" && request.method === "POST") {
       const payload = (await request.json()) as IdeaPayload;
       const id = crypto.randomUUID();
@@ -50,6 +63,19 @@ export default {
       };
       await env.CURATIONS_IDEAS.put(id, JSON.stringify(record));
       return Response.json(record, { status: 201 });
+    }
+
+    // Handle ideas GET (fetch all)
+    if (url.pathname === "/api/ideas" && request.method === "GET") {
+      const list = await env.CURATIONS_IDEAS.list();
+      const ideas = [];
+      for (const key of list.keys) {
+        const data = await env.CURATIONS_IDEAS.get(key.name);
+        if (data) {
+          ideas.push(JSON.parse(data));
+        }
+      }
+      return Response.json(ideas.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
     }
 
     if (url.pathname.startsWith("/api/forum")) {

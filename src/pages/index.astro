@@ -56,4 +56,36 @@ import { channels } from "@data/forum";
       ))}
     </div>
   </section>
+  
+  <script>
+    // Load live vote counts on page load
+    async function loadLiveData() {
+      try {
+        const response = await fetch('/api/votes');
+        if (response.ok) {
+          const votes = await response.json();
+          
+          // Update all vote buttons with live counts
+          document.querySelectorAll('[data-vote-button]').forEach(button => {
+            const id = button.dataset.id;
+            if (id && votes[id]) {
+              const countEl = button.querySelector('.vote-count');
+              const currentCount = votes[id];
+              button.dataset.count = String(currentCount);
+              if (countEl) countEl.textContent = String(currentCount);
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load live vote counts:', error);
+      }
+    }
+
+    // Load data when page is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadLiveData);
+    } else {
+      loadLiveData();
+    }
+  </script>
 </BaseLayout>

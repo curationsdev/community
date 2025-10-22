@@ -6,27 +6,34 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
   class="group inline-flex items-center gap-2 rounded-full border-4 border-ink bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-ink transition hover:-translate-y-1"
   data-id={id}
   data-count={initialCount}
+  data-vote-button
   type="button"
 >
   <span class="rounded-full bg-fuchsia-500 px-2 py-1 text-ink">▲</span>
   <span class="vote-count" aria-live="polite" role="status">{initialCount}</span>
 </button>
-<script is:inline>
+<script lang="ts">
   const endpoint = {JSON.stringify(endpoint)};
-  const script = document.currentScript;
-  const button = script?.previousElementSibling;
 
-  if (button instanceof HTMLButtonElement) {
-    const updateCount = (next: number) => {
-      button.dataset.count = String(next);
-      const countEl = button.querySelector<HTMLElement>(".vote-count");
-      if (countEl) countEl.textContent = String(next);
-    };
+  const bindVoteButton = (button: HTMLButtonElement) => {
+    if (button.dataset.voteBound === "true") return;
+    button.dataset.voteBound = "true";
 
     button.addEventListener("click", async () => {
       if (button.disabled) return;
 
-      const id = button.dataset.id ?? "unknown";
+      const id = button.dataset.id;
+      if (!id) {
+        console.error("Vote button is missing a data-id attribute.");
+        return;
+      }
+
+      const updateCount = (next: number) => {
+        button.dataset.count = String(next);
+        const countEl = button.querySelector<HTMLElement>(".vote-count");
+        if (countEl) countEl.textContent = String(next);
+      };
+
       const count = Number(button.dataset.count ?? "0");
       const next = count + 1;
       updateCount(next);
@@ -35,11 +42,15 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
       button.setAttribute("aria-busy", "true");
 
       try {
-        await fetch(endpoint, {
+        const response = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id }),
         });
+
+        if (!response.ok) {
+          throw new Error(`Vote request failed with status ${response.status}`);
+        }
       } catch (error) {
         console.error("Vote error", error);
         updateCount(count);
@@ -48,5 +59,17 @@ const endpoint = import.meta.env.PUBLIC_VOTE_ENDPOINT ?? "/api/vote";
         button.removeAttribute("aria-busy");
       }
     });
+  };
+
+  const hydrateVoteButtons = () => {
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-vote-button]")
+      .forEach((button) => bindVoteButton(button));
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", hydrateVoteButtons, { once: true });
+  } else {
+    hydrateVoteButtons();
   }
 </script>

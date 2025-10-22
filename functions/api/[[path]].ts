@@ -267,9 +267,9 @@ export async function onRequest(context: {
       
       // Add CORS headers to the response
       const newHeaders = new Headers(response.headers);
-      Object.entries(corsHeaders).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(corsHeaders)) {
         newHeaders.set(key, value);
-      });
+      }
       
       return new Response(response.body, {
         status: response.status,

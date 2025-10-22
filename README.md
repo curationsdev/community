@@ -1,7 +1,11 @@
 # 🌿 CURATIONS.DEV Community Home
 
+> **📝 Editing the Landing Page:**  
+> This README file serves as the source content for the landing page at [curations.dev](https://curations.dev).  
+> To update the landing page content, edit this README.md file, then sync the changes to `src/pages/index.astro`.
+
 <div align="center">
-  <img src="https://curations.org/favicon.svg" alt="CURATIONS logo" width="96" height="96" />
+  <h1><a href="https://curations.dev">CURATIONS.DEV</a></h1>
   <p><strong>Human × AI creative collaboration for people who curate with heart.</strong></p>
 </div>
 

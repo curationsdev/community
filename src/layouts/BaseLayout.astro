@@ -7,9 +7,17 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  showHeader?: boolean;
+  showFooter?: boolean;
 }
 
-const { title = "CURATIONS Community", description = "Human × AI collaboration hub", ogImage = "/og-default.svg" } = Astro.props;
+const { 
+  title = "CURATIONS Community", 
+  description = "Human × AI collaboration hub", 
+  ogImage = "/og-default.svg",
+  showHeader = true,
+  showFooter = true
+} = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="en" class="bg-sand">
@@ -29,11 +37,11 @@ const { title = "CURATIONS Community", description = "Human × AI collaboration 
   </head>
   <body class="bg-sand text-ink">
     <div class="min-h-screen flex flex-col">
-      <SiteHeader />
+      {showHeader && <SiteHeader />}
       <main class="flex-1">
         <slot />
       </main>
-      <SiteFooter />
+      {showFooter && <SiteFooter />}
     </div>
   </body>
 </html>
